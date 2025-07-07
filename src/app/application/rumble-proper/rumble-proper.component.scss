@@ -1,0 +1,59 @@
+.rumbler-box-proper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
+  margin: 0px 10px 10px;
+  padding: 10px;
+  border: 10px solid white;
+  border-radius: 20px;
+  flex-direction: column;
+  background: linear-gradient(
+    0deg,
+    rgb(33, 15, 148) 0%,
+    rgb(28, 16, 133) 16%,
+    rgb(31, 31, 184) 48%,
+    rgb(46, 46, 217) 75%,
+    rgb(82, 82, 242) 100%
+  );
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+}
+
+.rally-board-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  margin: 0px 10px 10px;
+  padding: 10px;
+  border: 10px solid white;
+  border-radius: 20px;
+  flex-direction: column;
+  background: linear-gradient(
+    0deg,
+    rgba(240, 226, 29, 1) 0%,
+    rgba(224, 211, 22, 1) 16%,
+    rgba(207, 194, 19, 1) 48%,
+    rgba(189, 177, 19, 1) 75%,
+    rgba(163, 153, 5, 1) 100%
+  );
+  color: #000;
+  text-align: center;
+  cursor: pointer;
+}
+
+.rally-board-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  margin-bottom: 10px;
+}
+
+.done-box{
+  background: transparent;
+}

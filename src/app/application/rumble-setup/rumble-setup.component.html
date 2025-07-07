@@ -1,0 +1,141 @@
+<div
+  style="
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    margin-top: 20px;
+  "
+>
+  <div
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 100%;
+      margin-top: 20px;
+    "
+  >
+    &nbsp;
+    <img
+      style="cursor: pointer"
+      routerLink="/application/main-menu"
+      [src]="rainbowRumbleLogo"
+      width="20%"
+    />
+    <img
+      (click)="file.click()"
+      style="cursor: pointer;margin-right: 10px;"
+      [src]="uploadIcon"
+      width="30px"
+    />
+    <input type="file" #file (change)="uploadRallyQuestions($event)" hidden accept="text/csv"/>
+  </div>
+  <div
+    style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 95%;
+      margin: 0px 20px;
+      padding: 20px;
+    "
+  >
+    <div
+      class="rumbler-box"
+      *ngFor="let r of rumblerInfo"
+      id="{{ r.code }}"
+      [class.active-box]="r.isActive"
+      (click)="configRumbler($event, r.code)"
+    >
+      <span style="font-size: x-large"
+        ><b>RUMBLER {{ r.id }}</b></span
+      >
+      <span style="font-size: xx-large">{{ r.name ? r.name : "?" }}</span>
+    </div>
+  </div>
+
+  <div
+    *ngIf="hasActiveBox"
+    style="
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 95%;
+      flex-direction: column;
+    "
+  >
+    <h1 style="margin-bottom: 10px; color: white">SET RUMBLER NAME</h1>
+    <div
+      style="
+        border: 10px solid white;
+        border-radius: 20px;
+        padding: 10px 20px;
+        width: 50%;
+        background-color: yellow;
+        color: white;
+        display: flex;
+        justify-content: center;
+      "
+    >
+      <input
+        #rumblerName
+        [(ngModel)]="selectedRumblerName"
+        style="
+          width: 100%;
+          padding: 20px;
+          font-size: xx-large;
+          text-align: center;
+          border: none;
+          text-transform: uppercase;
+        "
+      />
+    </div>
+    <button
+      (click)="submitName()"
+      style="
+        font-size: x-large;
+        width: 30%;
+        padding: 20px 10px;
+        margin-top: 10px;
+        border-radius: 20px;
+        border: none;
+        background-color: yellow;
+        font-weight: bold;
+        cursor: pointer;
+      "
+    >
+      Set Name
+    </button>
+  </div>
+  <div
+    style="
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      width: 95%;
+      flex-direction: column;
+      margin-top: 50px;
+    "
+  >
+    <button
+      routerLink="/application/rumble-proper"
+      *ngIf="isReadyToRumble"
+      style="
+        font-size: xx-large;
+        width: 35%;
+        padding: 20px 10px;
+        margin-bottom: 20px;
+        border-radius: 20px;
+        border: none;
+        background: #990069;
+        font-weight: bold;
+        color: #fff;
+        cursor: pointer;
+      "
+    >
+      START RUMBLING! >>
+    </button>
+  </div>
+</div>

@@ -1,1 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  margin: 0px;
+  padding: 0px;
+  //   position: relative;
+  background: radial-gradient(
+    circle,
+    rgba(63, 94, 251, 1) 0%,
+    rgba(252, 70, 107, 1) 100%
+  );
+}
+
+app-layout,
+app-body,
+app-main-menu {
+  //   height: 100vh;
+  margin: 0px;
+  padding: 0px;
+  max-height: calc(var(--screenH));
+}
+
+.center-container {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-self: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
