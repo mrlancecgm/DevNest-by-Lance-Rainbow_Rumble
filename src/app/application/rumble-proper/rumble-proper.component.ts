@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 
 import { uploadRallyQuestions } from '../../../shared/functions/functions';
+import * as feather from 'feather-icons';
 
 @Component({
   selector: 'app-rumble-proper',
@@ -22,7 +23,7 @@ export class RumbleProperComponent implements OnInit {
   public questions41_to_50: any[] = [];
   public hasCardPicked: boolean = false;
   public animateCard: boolean = false;
-
+  public uploadLabel: string = 'Browse File';
   public uploadRallyQuestions = uploadRallyQuestions;
 
   public currentQuestion: any = {
@@ -36,9 +37,14 @@ export class RumbleProperComponent implements OnInit {
     isDone: null,
   };
 
+  public selectedSetupCategory:string='upload';
+
   public rainbowRumbleLogo: string =
     'assets/logo/rainbow-rumble-transparent.png';
-  public uploadIcon: string = 'assets/icons/upload_white.png';
+  public setupIcon: string = 'assets/icons/setup-icon.png';
+  public fileBrowseIcon: string = 'assets/icons/file-browse.png';
+  public uploadInProgress:boolean=false;
+  public uploadSuccessful:boolean=false;
 
   public rumblerInfo: any[] = [
     {
@@ -139,30 +145,30 @@ export class RumbleProperComponent implements OnInit {
   }
 
   openModal(questionBox: any) {
-  console.log('QBox: ', questionBox);
-  this.currentQuestion = questionBox;
+    console.log('QBox: ', questionBox);
+    this.currentQuestion = questionBox;
 
-  this.hasCardPicked = true;
-
-  setTimeout(() => {
-    this.animateCard = true;
-  }, 20); 
-
-  setTimeout(() => {
-    this.hasCardPicked = false;
-    this.animateCard = false;
+    this.hasCardPicked = true;
 
     setTimeout(() => {
-      const modal = document.getElementById('myModal');
-      console.log('Modal: ', modal);
-      if (modal) {
-        modal.style.display = 'flex';
-        modal.style.alignItems = 'center';
-        modal.style.backdropFilter = 'brightness(0.5)';
-      }
-    });
-  }, 1000);
-}
+      this.animateCard = true;
+    }, 20);
+
+    setTimeout(() => {
+      this.hasCardPicked = false;
+      this.animateCard = false;
+
+      setTimeout(() => {
+        const modal = document.getElementById('myModal');
+        console.log('Modal: ', modal);
+        if (modal) {
+          modal.style.display = 'flex';
+          modal.style.alignItems = 'center';
+          modal.style.backdropFilter = 'brightness(0.5)';
+        }
+      });
+    }, 1000);
+  }
 
   closeModal(key?: string) {
     setTimeout(() => {
@@ -215,44 +221,42 @@ export class RumbleProperComponent implements OnInit {
             );
             cancelledItem.isDone = true;
           }
-        }else if(key == 'done'){
-          
+        } else if (key == 'done') {
         }
         modal.style.display = 'none';
       }
     });
   }
 
-  assignPoint(key:string,data?:any){
+  assignPoint(key: string, data?: any) {
     setTimeout(() => {
       const addPointModal = document.getElementById('addPointModal');
-      if(addPointModal){
-        if(key == 'open'){
-          
+      if (addPointModal) {
+        if (key == 'open') {
           // const rumblerInfo = localStorage.getItem('rumblerInfo');
           // if(rumblerInfo){
-          //   const 
+          //   const
           // }
           addPointModal.style.display = 'flex';
           addPointModal.style.backdropFilter = 'brightness(0.5)';
-        }else if(key == 'submit'){
-          console.log("Data: ", data);
-          const winner = this.rumblerInfo.find((a:any) => a.id == data.id);
-          winner.score++;          
-          localStorage.setItem('rumblerInfo',JSON.stringify(this.rumblerInfo));
+        } else if (key == 'submit') {
+          console.log('Data: ', data);
+          const winner = this.rumblerInfo.find((a: any) => a.id == data.id);
+          winner.score++;
+          localStorage.setItem('rumblerInfo', JSON.stringify(this.rumblerInfo));
           this.assignPoint('close');
           this.closeModal('cancel');
-        }else if(key == 'close'){
-          console.log("Closing...");
+        } else if (key == 'close') {
+          console.log('Closing...');
           addPointModal.style.display = 'none';
         }
       }
     });
-    
   }
 
   ngAfterViewInit() {
     this.dissminateQuestions();
+    feather.replace();
   }
 
   dissminateQuestions() {
@@ -306,10 +310,73 @@ export class RumbleProperComponent implements OnInit {
   }
 
   updateRallyQuestions(event: any) {
+    this.uploadInProgress = true;
+    this.uploadLabel = 'Uploading...';
     this.uploadRallyQuestions(event).then(() => {
       this.dissminateQuestions();
+      setTimeout(() => {
+        this.uploadInProgress = false;
+        this.uploadSuccessful = true;
+        this.uploadLabel = 'Uploaded!';
+        setTimeout(() => {
+          this.uploadSuccessful = false;
+          this.uploadLabel = 'Browse File';
+        },1500)
+      }, 1500);      
+
     });
   }
 
-  
+  setButtonTheme(
+    selectedEl: HTMLElement,
+    notSelectedEl1: HTMLElement,
+    notSelectedEl2: HTMLElement
+  ) {
+    selectedEl.classList.add('active');
+    notSelectedEl1.classList.remove('active');
+    notSelectedEl2.classList.remove('active');
+  }
+
+  setupRally(key: string) {
+    feather.replace();
+    setTimeout(() => {
+      const setupModal = document.getElementById('setupModal');
+      const uploadBtn = document.getElementById('upload-btn');
+      const modifyBtn = document.getElementById('modify-btn');
+      const scoringBtn = document.getElementById('scoring-btn');
+      const allBtnPresent = uploadBtn && modifyBtn && scoringBtn;
+      if (setupModal) {
+        if (key == 'open') {          
+          this.selectedSetupCategory = 'upload';
+          setupModal.style.display = 'flex';
+          setupModal.style.backdropFilter = 'brightness(0.5)';
+          feather.replace();
+          if (allBtnPresent) {
+            feather.replace();
+            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn);
+          }
+        } else if (key == 'upload') {
+          this.selectedSetupCategory = key;
+          if (allBtnPresent) {
+            feather.replace();
+            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn);
+          }
+        } else if (key == 'modify') {
+          this.selectedSetupCategory = key;
+          if (allBtnPresent) {
+            feather.replace();
+            this.setButtonTheme(modifyBtn, scoringBtn, uploadBtn);
+          }
+        } else if (key == 'scoring') {
+          this.selectedSetupCategory = key;
+          if (allBtnPresent) {
+            feather.replace();
+            this.setButtonTheme(scoringBtn, uploadBtn, modifyBtn);
+          }
+        } else if (key == 'close'){
+          setupModal.style.display = 'none';
+        }
+      }
+    });
+  }
 }

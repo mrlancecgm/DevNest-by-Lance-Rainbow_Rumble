@@ -46,6 +46,11 @@
   cursor: pointer;
 }
 
+.rally-board-box:hover{
+  transform: scale(1.2);
+  font-weight: bold;
+}
+
 .rally-board-row {
   display: flex;
   justify-content: center;
@@ -69,7 +74,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9998; 
+  z-index: 9998;
 }
 
 .picked-card {
@@ -96,7 +101,7 @@
   }
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: -6px;
     left: -6px;
@@ -130,4 +135,50 @@
   100% {
     background-position: 0% 50%;
   }
+}
+
+.setup-icon {
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.setup-icon:hover{
+  transform: scale(1.5);
+}
+
+.setup-segments{
+    height: 600px;
+    background: #f3f3f3;
+    border-radius: 10px;
+    padding: 10px;
+    flex-direction: column;
+}
+
+.setup-category{
+  padding:20px;
+  margin-bottom: 10px;
+  background: #e3e3e3;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.active {
+  background: linear-gradient(
+    0deg,
+    rgb(33, 15, 148) 0%,
+    rgb(28, 16, 133) 16%,
+    rgb(31, 31, 184) 48%,
+    rgb(46, 46, 217) 75%,
+    rgb(82, 82, 242) 100%
+  );
+  color: #fff;
+  font-weight: bold;
+}
+
+.category-content{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
 }
