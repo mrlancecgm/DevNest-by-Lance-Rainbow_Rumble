@@ -20,6 +20,8 @@ export class RumbleProperComponent implements OnInit {
   public questions21_to_30: any[] = [];
   public questions31_to_40: any[] = [];
   public questions41_to_50: any[] = [];
+  public hasCardPicked: boolean = false;
+  public animateCard: boolean = false;
 
   public uploadRallyQuestions = uploadRallyQuestions;
 
@@ -137,8 +139,19 @@ export class RumbleProperComponent implements OnInit {
   }
 
   openModal(questionBox: any) {
-    console.log('QBox: ', questionBox);
-    this.currentQuestion = questionBox;
+  console.log('QBox: ', questionBox);
+  this.currentQuestion = questionBox;
+
+  this.hasCardPicked = true;
+
+  setTimeout(() => {
+    this.animateCard = true;
+  }, 20); 
+
+  setTimeout(() => {
+    this.hasCardPicked = false;
+    this.animateCard = false;
+
     setTimeout(() => {
       const modal = document.getElementById('myModal');
       console.log('Modal: ', modal);
@@ -146,20 +159,96 @@ export class RumbleProperComponent implements OnInit {
         modal.style.display = 'flex';
         modal.style.alignItems = 'center';
         modal.style.backdropFilter = 'brightness(0.5)';
-        // modal.style.backdropFilter = 'brightness(0.5)';
-        // modal.setAttribute('style', 'display:block;backdrop-filter:brightness(0.5)');
       }
     });
-  }
+  }, 1000);
+}
 
-  closeModal() {
+  closeModal(key?: string) {
     setTimeout(() => {
       const modal = document.getElementById('myModal');
       console.log('Modal: ', modal);
       if (modal) {
+        if (key == 'cancel') {
+          if (
+            this.currentQuestion.questionId >= 1 &&
+            this.currentQuestion.questionId <= 10
+          ) {
+            const cancelledItem = this.questions1_to_10.find(
+              (a: any) => a.questionId == this.currentQuestion.questionId
+            );
+            cancelledItem.isDone = true;
+          }
+          if (
+            this.currentQuestion.questionId >= 11 &&
+            this.currentQuestion.questionId <= 20
+          ) {
+            const cancelledItem = this.questions11_to_20.find(
+              (a: any) => a.questionId == this.currentQuestion.questionId
+            );
+            cancelledItem.isDone = true;
+          }
+          if (
+            this.currentQuestion.questionId >= 21 &&
+            this.currentQuestion.questionId <= 30
+          ) {
+            const cancelledItem = this.questions21_to_30.find(
+              (a: any) => a.questionId == this.currentQuestion.questionId
+            );
+            cancelledItem.isDone = true;
+          }
+          if (
+            this.currentQuestion.questionId >= 31 &&
+            this.currentQuestion.questionId <= 40
+          ) {
+            const cancelledItem = this.questions31_to_40.find(
+              (a: any) => a.questionId == this.currentQuestion.questionId
+            );
+            cancelledItem.isDone = true;
+          }
+          if (
+            this.currentQuestion.questionId >= 41 &&
+            this.currentQuestion.questionId <= 50
+          ) {
+            const cancelledItem = this.questions41_to_50.find(
+              (a: any) => a.questionId == this.currentQuestion.questionId
+            );
+            cancelledItem.isDone = true;
+          }
+        }else if(key == 'done'){
+          
+        }
         modal.style.display = 'none';
       }
     });
+  }
+
+  assignPoint(key:string,data?:any){
+    setTimeout(() => {
+      const addPointModal = document.getElementById('addPointModal');
+      if(addPointModal){
+        if(key == 'open'){
+          
+          // const rumblerInfo = localStorage.getItem('rumblerInfo');
+          // if(rumblerInfo){
+          //   const 
+          // }
+          addPointModal.style.display = 'flex';
+          addPointModal.style.backdropFilter = 'brightness(0.5)';
+        }else if(key == 'submit'){
+          console.log("Data: ", data);
+          const winner = this.rumblerInfo.find((a:any) => a.id == data.id);
+          winner.score++;          
+          localStorage.setItem('rumblerInfo',JSON.stringify(this.rumblerInfo));
+          this.assignPoint('close');
+          this.closeModal('cancel');
+        }else if(key == 'close'){
+          console.log("Closing...");
+          addPointModal.style.display = 'none';
+        }
+      }
+    });
+    
   }
 
   ngAfterViewInit() {
@@ -217,8 +306,10 @@ export class RumbleProperComponent implements OnInit {
   }
 
   updateRallyQuestions(event: any) {
-  this.uploadRallyQuestions(event).then(() => {
-    this.dissminateQuestions();
-  });
-}
+    this.uploadRallyQuestions(event).then(() => {
+      this.dissminateQuestions();
+    });
+  }
+
+  
 }

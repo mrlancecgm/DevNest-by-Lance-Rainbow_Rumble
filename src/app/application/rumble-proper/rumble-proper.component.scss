@@ -54,6 +54,80 @@
   margin-bottom: 10px;
 }
 
-.done-box{
-  background: transparent;
+.done-box {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.picked-card-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9998; 
+}
+
+.picked-card {
+  position: relative;
+  width: 550px;
+  height: 550px;
+  font-size: 400px;
+  font-weight: bold;
+  border-radius: 50px;
+  background: #000;
+  color: white;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transition: transform 1.5s ease-in-out, opacity 1.5s ease-in-out;
+  opacity: 1;
+  transform: scale(1);
+
+  &.animate {
+    transform: scale(2);
+    opacity: 0;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    z-index: -1;
+    background: linear-gradient(
+      270deg,
+      red,
+      orange,
+      yellow,
+      green,
+      cyan,
+      blue,
+      violet,
+      red
+    );
+    border-radius: inherit;
+    background-size: 400% 400%;
+    animation: borderRGB 8s linear infinite;
+  }
+}
+
+@keyframes borderRGB {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }

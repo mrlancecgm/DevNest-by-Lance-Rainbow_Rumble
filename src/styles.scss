@@ -1,19 +1,38 @@
-html,
-body {
-  margin: 0px;
-  padding: 0px;
-  //   position: relative;
-  background: radial-gradient(
-    circle,
-    rgba(63, 94, 251, 1) 0%,
-    rgba(252, 70, 107, 1) 100%
-  );
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
 }
+
+.animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -9999;
+  background: linear-gradient(-45deg, #720505, #b97002, #129212, #00265e, #530b83, #000);
+  background-size: 400% 400%;
+  animation: animatedBackground 15s ease infinite;
+}
+
+@keyframes animatedBackground {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 
 app-layout,
 app-body,
 app-main-menu {
-  //   height: 100vh;
   margin: 0px;
   padding: 0px;
   max-height: calc(var(--screenH));
