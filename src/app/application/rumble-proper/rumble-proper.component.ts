@@ -37,14 +37,18 @@ export class RumbleProperComponent implements OnInit {
     isDone: null,
   };
 
-  public selectedSetupCategory:string='upload';
+  public selectedSetupCategory: string = 'upload';
+  public questionToEdit: any = {
+    id: null,
+    text: null,
+  };
 
   public rainbowRumbleLogo: string =
     'assets/logo/rainbow-rumble-transparent.png';
   public setupIcon: string = 'assets/icons/setup-icon.png';
   public fileBrowseIcon: string = 'assets/icons/file-browse.png';
-  public uploadInProgress:boolean=false;
-  public uploadSuccessful:boolean=false;
+  public uploadInProgress: boolean = false;
+  public uploadSuccessful: boolean = false;
 
   public rumblerInfo: any[] = [
     {
@@ -321,9 +325,8 @@ export class RumbleProperComponent implements OnInit {
         setTimeout(() => {
           this.uploadSuccessful = false;
           this.uploadLabel = 'Browse File';
-        },1500)
-      }, 1500);      
-
+        }, 1500);
+      }, 1500);
     });
   }
 
@@ -346,7 +349,7 @@ export class RumbleProperComponent implements OnInit {
       const scoringBtn = document.getElementById('scoring-btn');
       const allBtnPresent = uploadBtn && modifyBtn && scoringBtn;
       if (setupModal) {
-        if (key == 'open') {          
+        if (key == 'open') {
           this.selectedSetupCategory = 'upload';
           setupModal.style.display = 'flex';
           setupModal.style.backdropFilter = 'brightness(0.5)';
@@ -373,10 +376,75 @@ export class RumbleProperComponent implements OnInit {
             feather.replace();
             this.setButtonTheme(scoringBtn, uploadBtn, modifyBtn);
           }
-        } else if (key == 'close'){
+        } else if (key == 'close') {
           setupModal.style.display = 'none';
         }
       }
     });
+  }
+
+  getQuestionSetJurisdiction(id: number): any[] {
+    if (id >= 1 && id <= 10) {
+      return this.questions1_to_10;
+    } else if (id >= 11 && id <= 20) {
+      return this.questions11_to_20;
+    } else if (id >= 21 && id <= 30) {
+      return this.questions21_to_30;
+    } else if (id >= 31 && id <= 40) {
+      return this.questions31_to_40;
+    } else if (id >= 41 && id <= 50) {
+      return this.questions41_to_50;
+    }
+
+    return [];
+  }
+
+  editQuestion(key: string, questionId?: number) {
+    setTimeout(() => {
+      const modal = document.getElementById('editQuestionModal');
+      if (modal) {
+        if (key == 'open') {
+          if (questionId) {
+            const questionSrc = this.getQuestionSetJurisdiction(questionId);
+            if (questionSrc) {
+              const questionObj = questionSrc.find(
+                (a: any) => a.questionId == questionId
+              );
+              if (questionObj) {
+                this.questionToEdit.id = questionObj.questionId;
+                this.questionToEdit.text = questionObj.statement;
+                console.log('Question To Edit: ', this.questionToEdit);
+              }
+            }
+          }
+          modal.style.display = 'flex';
+          modal.style.backdropFilter = 'brightness(0.5)';
+        } else if (key == 'close') {
+          modal.style.display = 'none';
+        } else if (key == 'submit') {
+          console.log('Edited: ', this.questionToEdit.text);
+          const questionSrc = this.getQuestionSetJurisdiction(
+            this.questionToEdit.id
+          );
+          console.log('src: ', questionSrc);
+          questionSrc.map((d: any) => {
+            d.statement =
+              d.questionId == this.questionToEdit.id
+                ? this.questionToEdit.text
+                : d.statement;
+            return d;
+          });
+
+        this.saveEditedRallyQuestions();
+        }
+      }
+    });
+  }
+
+  saveEditedRallyQuestions(){
+    const mergedArray = [...this.questions1_to_10,...this.questions11_to_20,...this.questions21_to_30,...this.questions31_to_40,...this.questions41_to_50];
+    console.log("mergedArray", mergedArray);
+    localStorage.setItem('rallyQuestions',JSON.stringify(mergedArray));
+    this.editQuestion('close');
   }
 }

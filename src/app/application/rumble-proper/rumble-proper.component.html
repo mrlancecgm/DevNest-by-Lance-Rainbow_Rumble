@@ -94,7 +94,7 @@
     <div class="rally-board-row">
       <div
         [class.done-box]="q.isDone"
-        *ngFor="let q of questions11_to_20"
+        *ngFor="let q of questions11_to_20"        
         class="rally-board-box"
         (click)="openModal(q)"
       >
@@ -257,7 +257,11 @@
     >
       <div class="modal-header">
         <h4 class="modal-title">RALLY SETUP</h4>
-        <button (click)="setupRally('close')" type="button" class="btn-close"></button>
+        <button
+          (click)="setupRally('close')"
+          type="button"
+          class="btn-close"
+        ></button>
       </div>
 
       <div class="modal-body">
@@ -290,7 +294,7 @@
           </div>
           <div
             class="d-flex justify-content-center setup-segments"
-            style="width: 69%"
+            style="width: 69%;"
           >
             <div
               class="category-content"
@@ -312,19 +316,148 @@
               >
                 <!-- <i data-feather="file-plus"></i
                 > -->
-                <span style="margin-left: 10px">{{
-                  uploadLabel
-                }}</span>
+                <span style="margin-left: 10px">{{ uploadLabel }}</span>
               </button>
               <span style="font-style: oblique; color: grey"
                 >Accepts only CSV files</span
               >
             </div>
-            <div *ngIf="selectedSetupCategory === 'modify'">Modify</div>
+            <div
+              class="category-content justify-content-start"
+              style="overflow-y: scroll;"
+              *ngIf="selectedSetupCategory === 'modify'"
+            >
+              <div
+                (click)="editQuestion('open',q.questionId)"
+                class="d-flex justify-content-center mb-2 question-item"
+                
+                *ngFor="let q of questions1_to_10"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center question-id"
+                  
+                >
+                  {{ q.questionId }}
+                </div>
+                <div
+                  class="d-flex justify-content-center align-items-center question-statement"
+                  [style.color] = "q.statement ? '#000' : '#737373'"
+                >
+                  {{ q.statement ? q.statement : 'No question.' }}
+                </div>
+              </div>
+              <div
+                (click)="editQuestion('open',q.questionId)"
+                class="d-flex justify-content-center mb-2 question-item"
+                *ngFor="let q of questions11_to_20"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center question-id"
+                  
+                >
+                  {{ q.questionId }}
+                </div>
+                <div
+                  class="d-flex justify-content-center align-items-center question-statement"
+                  [style.color] = "q.statement ? '#000' : '#737373'"
+                >
+                  {{ q.statement ? q.statement : 'No question.' }}
+                </div>
+              </div>
+              <div
+                (click)="editQuestion('open',q.questionId)"
+                class="d-flex justify-content-center mb-2 question-item"
+                *ngFor="let q of questions21_to_30"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center question-id"
+                  
+                >
+                  {{ q.questionId }}
+                </div>
+                <div
+                  class="d-flex justify-content-center align-items-center question-statement"
+                  [style.color] = "q.statement ? '#000' : '#737373'"
+                >
+                  {{ q.statement ? q.statement : 'No question.' }}
+                </div>
+              </div>
+              <div
+                (click)="editQuestion('open',q.questionId)"
+                class="d-flex justify-content-center mb-2 question-item"
+                *ngFor="let q of questions31_to_40"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center question-id"
+                  
+                >
+                  {{ q.questionId }}
+                </div>
+                <div
+                  class="d-flex justify-content-center align-items-center question-statement"
+                  [style.color] = "q.statement ? '#000' : '#737373'"
+                >
+                  {{ q.statement ? q.statement : 'No question.' }}
+                </div>
+              </div>
+              <div
+                (click)="editQuestion('open',q.questionId)"
+                class="d-flex justify-content-center mb-2 question-item"
+                *ngFor="let q of questions41_to_50"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center question-id"
+                  
+                >
+                  {{ q.questionId }}
+                </div>
+                <div
+                  class="d-flex justify-content-center align-items-center question-statement"
+                  [style.color] = "q.statement ? '#000' : '#737373'"
+                >
+                  {{ q.statement ? q.statement : 'No question.' }}
+                </div>
+              </div>
+            </div>
             <div *ngIf="selectedSetupCategory === 'scoring'">Scoring</div>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="editQuestionModal">
+  <div class="modal-dialog">
+    <div
+      class="modal-content"
+      style="width: 600px; justify-self: center; height: 500px"
+    >
+      <div class="modal-header">
+        <h4 class="modal-title">EDIT QUESTION {{ questionToEdit?.id }}</h4>
+        <button
+          (click)="editQuestion('close')"
+          type="button"
+          class="btn-close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="d-flex justify-content-between" style="width: 100%">
+          <textarea class="question-holder" [(ngModel)]="questionToEdit.text"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+          <button
+            (click)="editQuestion('submit')"
+            type="button"
+            class="btn btn-success"
+            data-bs-dismiss="modal"
+          >
+            Save
+          </button>
+        </div>
     </div>
   </div>
 </div>

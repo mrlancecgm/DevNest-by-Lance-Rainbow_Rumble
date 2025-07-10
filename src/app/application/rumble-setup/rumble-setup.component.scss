@@ -9,12 +9,52 @@
   border: 10px solid white;
   border-radius: 20px;
   flex-direction: column;
-  background: linear-gradient(0deg,rgba(33, 15, 148, 1) 0%, rgba(28, 16, 133, 1) 16%, rgba(31, 31, 184, 1) 48%, rgba(46, 46, 217, 1) 75%, rgba(82, 82, 242, 1) 100%);
+  background: linear-gradient(
+    0deg,
+    rgba(33, 15, 148, 1) 0%,
+    rgba(28, 16, 133, 1) 16%,
+    rgba(31, 31, 184, 1) 48%,
+    rgba(46, 46, 217, 1) 75%,
+    rgba(82, 82, 242, 1) 100%
+  );
   color: #fff;
   text-align: center;
   cursor: pointer;
 }
 
-.active-box{
-    box-shadow: 0 0 10px 10px lightblue;
+.rumbler-box:hover {
+  transform: scale(1.05);
+}
+
+.active-box {
+  box-shadow: 0 0 10px 10px lightblue;
+}
+
+.start-rumble-button {
+  font-size: xx-large;
+  width: 35%;
+  padding: 20px 10px;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  border: none;
+  background: #990069;
+  font-weight: bold;
+  color: #fff;
+  cursor: pointer;
+}
+
+.set-name-button {
+  font-size: x-large;
+  width: 30%;
+  padding: 20px 10px;
+  margin-top: 10px;
+  border-radius: 20px;
+  border: none;
+  background-color: yellow;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.set-name-button:hover {
+  transform: scale(1.05);
 }

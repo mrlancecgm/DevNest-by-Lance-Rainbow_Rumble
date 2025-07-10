@@ -94,17 +94,7 @@
     </div>
     <button
       (click)="submitName()"
-      style="
-        font-size: x-large;
-        width: 30%;
-        padding: 20px 10px;
-        margin-top: 10px;
-        border-radius: 20px;
-        border: none;
-        background-color: yellow;
-        font-weight: bold;
-        cursor: pointer;
-      "
+      class="set-name-button"
     >
       Set Name
     </button>
@@ -122,18 +112,7 @@
     <button
       routerLink="/application/rumble-proper"
       *ngIf="isReadyToRumble"
-      style="
-        font-size: xx-large;
-        width: 35%;
-        padding: 20px 10px;
-        margin-bottom: 20px;
-        border-radius: 20px;
-        border: none;
-        background: #990069;
-        font-weight: bold;
-        color: #fff;
-        cursor: pointer;
-      "
+      class="start-rumble-button"
     >
       START RUMBLING! >>
     </button>
