@@ -94,7 +94,7 @@
     <div class="rally-board-row">
       <div
         [class.done-box]="q.isDone"
-        *ngFor="let q of questions11_to_20"        
+        *ngFor="let q of questions11_to_20"
         class="rally-board-box"
         (click)="openModal(q)"
       >
@@ -293,8 +293,11 @@
             </div>
           </div>
           <div
-            class="d-flex justify-content-center setup-segments"
-            style="width: 69%;"
+            class="d-flex setup-segments"
+            [style.justify-content]="
+              selectedSetupCategory === 'scoring' ? 'flex-start' : 'center'
+            "
+            style="width: 69%"
           >
             <div
               class="category-content"
@@ -324,102 +327,165 @@
             </div>
             <div
               class="category-content justify-content-start"
-              style="overflow-y: scroll;"
+              style="overflow-y: scroll"
               *ngIf="selectedSetupCategory === 'modify'"
             >
               <div
-                (click)="editQuestion('open',q.questionId)"
+                (click)="editQuestion('open', q.questionId)"
                 class="d-flex justify-content-center mb-2 question-item"
-                
                 *ngFor="let q of questions1_to_10"
               >
                 <div
                   class="d-flex justify-content-center align-items-center question-id"
-                  
                 >
                   {{ q.questionId }}
                 </div>
                 <div
                   class="d-flex justify-content-center align-items-center question-statement"
-                  [style.color] = "q.statement ? '#000' : '#737373'"
+                  [style.color]="q.statement ? '#000' : '#737373'"
                 >
-                  {{ q.statement ? q.statement : 'No question.' }}
+                  {{ q.statement ? q.statement : "No question." }}
                 </div>
               </div>
               <div
-                (click)="editQuestion('open',q.questionId)"
+                (click)="editQuestion('open', q.questionId)"
                 class="d-flex justify-content-center mb-2 question-item"
                 *ngFor="let q of questions11_to_20"
               >
                 <div
                   class="d-flex justify-content-center align-items-center question-id"
-                  
                 >
                   {{ q.questionId }}
                 </div>
                 <div
                   class="d-flex justify-content-center align-items-center question-statement"
-                  [style.color] = "q.statement ? '#000' : '#737373'"
+                  [style.color]="q.statement ? '#000' : '#737373'"
                 >
-                  {{ q.statement ? q.statement : 'No question.' }}
+                  {{ q.statement ? q.statement : "No question." }}
                 </div>
               </div>
               <div
-                (click)="editQuestion('open',q.questionId)"
+                (click)="editQuestion('open', q.questionId)"
                 class="d-flex justify-content-center mb-2 question-item"
                 *ngFor="let q of questions21_to_30"
               >
                 <div
                   class="d-flex justify-content-center align-items-center question-id"
-                  
                 >
                   {{ q.questionId }}
                 </div>
                 <div
                   class="d-flex justify-content-center align-items-center question-statement"
-                  [style.color] = "q.statement ? '#000' : '#737373'"
+                  [style.color]="q.statement ? '#000' : '#737373'"
                 >
-                  {{ q.statement ? q.statement : 'No question.' }}
+                  {{ q.statement ? q.statement : "No question." }}
                 </div>
               </div>
               <div
-                (click)="editQuestion('open',q.questionId)"
+                (click)="editQuestion('open', q.questionId)"
                 class="d-flex justify-content-center mb-2 question-item"
                 *ngFor="let q of questions31_to_40"
               >
                 <div
                   class="d-flex justify-content-center align-items-center question-id"
-                  
                 >
                   {{ q.questionId }}
                 </div>
                 <div
                   class="d-flex justify-content-center align-items-center question-statement"
-                  [style.color] = "q.statement ? '#000' : '#737373'"
+                  [style.color]="q.statement ? '#000' : '#737373'"
                 >
-                  {{ q.statement ? q.statement : 'No question.' }}
+                  {{ q.statement ? q.statement : "No question." }}
                 </div>
               </div>
               <div
-                (click)="editQuestion('open',q.questionId)"
+                (click)="editQuestion('open', q.questionId)"
                 class="d-flex justify-content-center mb-2 question-item"
                 *ngFor="let q of questions41_to_50"
               >
                 <div
                   class="d-flex justify-content-center align-items-center question-id"
-                  
                 >
                   {{ q.questionId }}
                 </div>
                 <div
                   class="d-flex justify-content-center align-items-center question-statement"
-                  [style.color] = "q.statement ? '#000' : '#737373'"
+                  [style.color]="q.statement ? '#000' : '#737373'"
                 >
-                  {{ q.statement ? q.statement : 'No question.' }}
+                  {{ q.statement ? q.statement : "No question." }}
                 </div>
               </div>
             </div>
-            <div *ngIf="selectedSetupCategory === 'scoring'">Scoring</div>
+            <div
+              class="category-content justify-content-start"
+              *ngIf="selectedSetupCategory === 'scoring'"
+            >
+              <div class="d-flex col-12 justify-content-end mb-2">
+                <button
+                  [class.unclickable]="allScoresAreZero"
+                  class="btn btn-primary"
+                  (click)="confirmScoreReset('open')"
+                >
+                  Reset Scores
+                </button>
+              </div>
+              <div
+                class="d-flex col-12 justify-content-center"
+                style="flex-direction: column"
+              >
+                <div
+                  class="d-flex col-12 justify-content-center mb-2"
+                  style="
+                    background: #e2e2e2;
+                    padding: 10px;
+                    border-radius: 10px;
+                  "
+                  *ngFor="let r of rumblerInfo"
+                >
+                  <div class="d-flex col-8 justify-content-start">
+                    <div
+                      class="d-flex justify-content-center align-items-center rumbler-info-number"
+                    >
+                      Rumbler {{ r.id }}
+                    </div>
+                    <div
+                      class="d-flex justify-content-center align-items-center rumbler-info-name"
+                    >
+                      {{ r.name }}
+                    </div>
+                  </div>
+                  <div class="d-flex col-4 justify-content-end">
+                    <div
+                      (click)="controlScore('minus', r)"
+                      class="d-flex justify-content-center align-items-center score-control-button"
+                      style="background: #d92818"
+                      [class.unclickable]="r.score === 0"
+                    >
+                      -
+                    </div>
+                    <div
+                      class="d-flex justify-content-center align-items-center"
+                      style="
+                        height: 50px;
+                        width: 80px;
+                        margin-right: 5px;
+                        font-weight: 500;
+                        font-size: xx-large;
+                      "
+                    >
+                      {{ r.score }}
+                    </div>
+                    <div
+                      (click)="controlScore('plus', r)"
+                      class="d-flex justify-content-center align-items-center score-control-button"
+                      style="background: #499600"
+                    >
+                      +
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -444,20 +510,61 @@
 
       <div class="modal-body">
         <div class="d-flex justify-content-between" style="width: 100%">
-          <textarea class="question-holder" [(ngModel)]="questionToEdit.text"></textarea>
+          <textarea
+            class="question-holder"
+            [(ngModel)]="questionToEdit.text"
+          ></textarea>
         </div>
       </div>
 
       <div class="modal-footer">
-          <button
-            (click)="editQuestion('submit')"
-            type="button"
-            class="btn btn-success"
-            data-bs-dismiss="modal"
+        <button
+          (click)="editQuestion('submit')"
+          type="button"
+          class="btn btn-success"
+          data-bs-dismiss="modal"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="confirmScoreResetModal">
+  <div class="modal-dialog">
+    <div
+      class="modal-content"
+      style="width: fit-content; justify-self: center; height: fit-content"
+    >
+      <div class="modal-header">
+        <h4 class="modal-title">SCORE RESET CONFIRMATION</h4>
+        <button
+          (click)="confirmScoreReset('close')"
+          type="button"
+          class="btn-close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="d-flex justify-content-between" style="width: 100%">
+          <span
+            >You are about to reset all scores back to zero. Please confirm to
+            proceed.</span
           >
-            Save
-          </button>
         </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          (click)="controlScore('reset')"
+          type="button"
+          class="btn btn-success"
+          data-bs-dismiss="modal"
+        >
+          Confirm
+        </button>
+      </div>
     </div>
   </div>
 </div>

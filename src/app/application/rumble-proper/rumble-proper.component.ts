@@ -43,6 +43,8 @@ export class RumbleProperComponent implements OnInit {
     text: null,
   };
 
+  public allScoresAreZero:boolean = false;
+
   public rainbowRumbleLogo: string =
     'assets/logo/rainbow-rumble-transparent.png';
   public setupIcon: string = 'assets/icons/setup-icon.png';
@@ -237,16 +239,13 @@ export class RumbleProperComponent implements OnInit {
       const addPointModal = document.getElementById('addPointModal');
       if (addPointModal) {
         if (key == 'open') {
-          // const rumblerInfo = localStorage.getItem('rumblerInfo');
-          // if(rumblerInfo){
-          //   const
-          // }
           addPointModal.style.display = 'flex';
           addPointModal.style.backdropFilter = 'brightness(0.5)';
         } else if (key == 'submit') {
           console.log('Data: ', data);
           const winner = this.rumblerInfo.find((a: any) => a.id == data.id);
           winner.score++;
+          this.allScoresAreZero = this.checkIfAllScoresAreZero();
           localStorage.setItem('rumblerInfo', JSON.stringify(this.rumblerInfo));
           this.assignPoint('close');
           this.closeModal('cancel');
@@ -371,7 +370,8 @@ export class RumbleProperComponent implements OnInit {
             this.setButtonTheme(modifyBtn, scoringBtn, uploadBtn);
           }
         } else if (key == 'scoring') {
-          this.selectedSetupCategory = key;
+          this.selectedSetupCategory = key;     
+          this.allScoresAreZero = this.checkIfAllScoresAreZero();
           if (allBtnPresent) {
             feather.replace();
             this.setButtonTheme(scoringBtn, uploadBtn, modifyBtn);
@@ -381,6 +381,45 @@ export class RumbleProperComponent implements OnInit {
         }
       }
     });
+  } 
+
+  checkIfAllScoresAreZero():boolean{
+    return (this.rumblerInfo.filter((r:any) => r.score == 0)).length == 5;     
+  }
+  
+  confirmScoreReset(key:string){
+      setTimeout(() => {
+        const modal = document.getElementById('confirmScoreResetModal');
+        if(modal){
+          if(key == 'open'){
+            (modal as HTMLElement).style.display = 'flex';
+            (modal as HTMLElement).style.backdropFilter = 'brightness(0.5)';
+          }
+          else if(key == 'close'){
+            (modal as HTMLElement).style.display = 'none';
+          }
+        }
+      })
+  }
+
+  controlScore(action:string,rumblerInfo?:any){    
+    if(action == 'minus'){      
+      const rumbler = this.rumblerInfo.find((r: any) => r.id == rumblerInfo.id);
+      rumbler.score--;
+    }else if(action == 'plus'){      
+      const rumbler = this.rumblerInfo.find((r: any) => r.id == rumblerInfo.id);
+      rumbler.score++;
+    } else if (action == 'reset'){
+      this.rumblerInfo.map((r: any) => {
+        r.score = 0;
+        return r;
+      })
+      this.confirmScoreReset('close');
+    }
+    this.allScoresAreZero = this.checkIfAllScoresAreZero();
+    console.log("Rumbler Info: ", this.rumblerInfo);
+
+    localStorage.setItem('rumblerInfo', JSON.stringify(this.rumblerInfo));
   }
 
   getQuestionSetJurisdiction(id: number): any[] {
