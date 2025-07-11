@@ -48,7 +48,7 @@
 
 .rally-board-box:hover {
   transform: scale(1.2);
-  font-weight: bold;
+  font-weight: 900;
 }
 
 .rally-board-row {
@@ -61,7 +61,7 @@
 
 .done-box {
   pointer-events: none;
-  opacity: 0;
+  background: transparent;
 }
 
 .picked-card-backdrop {

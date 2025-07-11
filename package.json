@@ -1,12 +1,15 @@
 {
   "name": "rainbow-rumble-app",
   "version": "0.0.0",
+  "main": "app.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "electron": "electron .",
+    "electron-build": "ng build && electron ."
   },
   "private": true,
   "dependencies": {
@@ -22,6 +25,7 @@
     "@ng-bootstrap/ng-bootstrap": "^9.1.2",
     "bootstrap": "^5.3.7",
     "convert-csv-to-json": "^3.5.0",
+    "electron-packager": "^17.1.2",
     "feather-icons": "^4.29.2",
     "file-saver": "^2.0.5",
     "jszip": "^3.10.1",
@@ -39,6 +43,7 @@
     "@types/jasmine": "~5.1.0",
     "@types/node": "^24.0.10",
     "@types/papaparse": "^5.3.16",
+    "electron": "^37.2.1",
     "jasmine-core": "~5.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",

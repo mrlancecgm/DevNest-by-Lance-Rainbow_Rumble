@@ -40,3 +40,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+#Executable files
+.exe
+/rainbowRumbleApplication2025-win32-x64
