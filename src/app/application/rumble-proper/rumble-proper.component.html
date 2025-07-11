@@ -72,12 +72,21 @@
         [src]="rainbowRumbleLogo"
         width="20%"
       />
-      <img
+      <div class="d-flex justify-content-between"> 
+        <img
         (click)="setupRally('open')"
         class="setup-icon"
         [src]="setupIcon"
         width="50px"
       />
+      <img
+        style="margin-left: 10px;"
+        class="setup-icon"
+        [src]="exitIcon"
+        width="50px"
+      />
+      </div>
+      
     </div>
 
     <div class="rally-board-row">
@@ -291,6 +300,14 @@
               <i data-feather="table"></i>
               <span style="margin-left: 10px">Scoring</span>
             </div>
+            <div
+              class="setup-category"
+              id="save-btn"
+              (click)="setupRally('save')"
+            >
+              <i data-feather="upload"></i>
+              <span style="margin-left: 10px">Save Progress</span>
+            </div>
           </div>
           <div
             class="d-flex setup-segments"
@@ -485,6 +502,19 @@
                   </div>
                 </div>
               </div>
+            </div>
+            <div
+              class="category-content"
+              *ngIf="selectedSetupCategory === 'save'"
+            >              
+              <img [src]="saveIcon" width="20%" class="mb-2" />
+              <button
+                (click)="saveGameData()"
+                class="btn btn-primary"
+                style="padding: 10px 20px; width: 40%"
+              >
+                <span>Save Game Data</span>
+              </button>
             </div>
           </div>
         </div>

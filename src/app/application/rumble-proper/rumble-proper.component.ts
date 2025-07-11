@@ -5,8 +5,15 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 
-import { uploadRallyQuestions } from '../../../shared/functions/functions';
+import {
+  convertToCSV,
+  uploadRallyQuestions,
+} from '../../../shared/functions/functions';
 import * as feather from 'feather-icons';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+import * as fs from 'fs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-rumble-proper',
@@ -25,6 +32,7 @@ export class RumbleProperComponent implements OnInit {
   public animateCard: boolean = false;
   public uploadLabel: string = 'Browse File';
   public uploadRallyQuestions = uploadRallyQuestions;
+  public convertToCSV = convertToCSV;
 
   public currentQuestion: any = {
     questionId: null,
@@ -43,12 +51,14 @@ export class RumbleProperComponent implements OnInit {
     text: null,
   };
 
-  public allScoresAreZero:boolean = false;
+  public allScoresAreZero: boolean = false;
 
   public rainbowRumbleLogo: string =
     'assets/logo/rainbow-rumble-transparent.png';
   public setupIcon: string = 'assets/icons/setup-icon.png';
   public fileBrowseIcon: string = 'assets/icons/file-browse.png';
+  public saveIcon: string = 'assets/icons/save.png';
+  public exitIcon: string = 'assets/icons/exit.png';
   public uploadInProgress: boolean = false;
   public uploadSuccessful: boolean = false;
 
@@ -90,7 +100,7 @@ export class RumbleProperComponent implements OnInit {
     },
   ];
 
-  constructor() {}
+  constructor(private datePipe: DatePipe) {}
 
   ngOnInit(): void {
     const rumblerInfo = localStorage.getItem('rumblerInfo');
@@ -332,11 +342,13 @@ export class RumbleProperComponent implements OnInit {
   setButtonTheme(
     selectedEl: HTMLElement,
     notSelectedEl1: HTMLElement,
-    notSelectedEl2: HTMLElement
+    notSelectedEl2: HTMLElement,
+    notSelectedEl3: HTMLElement
   ) {
     selectedEl.classList.add('active');
     notSelectedEl1.classList.remove('active');
     notSelectedEl2.classList.remove('active');
+    notSelectedEl3.classList.remove('active');
   }
 
   setupRally(key: string) {
@@ -346,7 +358,8 @@ export class RumbleProperComponent implements OnInit {
       const uploadBtn = document.getElementById('upload-btn');
       const modifyBtn = document.getElementById('modify-btn');
       const scoringBtn = document.getElementById('scoring-btn');
-      const allBtnPresent = uploadBtn && modifyBtn && scoringBtn;
+      const saveBtn = document.getElementById('save-btn');
+      const allBtnPresent = uploadBtn && modifyBtn && scoringBtn && saveBtn;
       if (setupModal) {
         if (key == 'open') {
           this.selectedSetupCategory = 'upload';
@@ -355,69 +368,75 @@ export class RumbleProperComponent implements OnInit {
           feather.replace();
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn);
+            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn, saveBtn);
           }
         } else if (key == 'upload') {
           this.selectedSetupCategory = key;
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn);
+            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn, saveBtn);
           }
         } else if (key == 'modify') {
           this.selectedSetupCategory = key;
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(modifyBtn, scoringBtn, uploadBtn);
+            this.setButtonTheme(modifyBtn, scoringBtn, uploadBtn, saveBtn);
           }
         } else if (key == 'scoring') {
-          this.selectedSetupCategory = key;     
+          this.selectedSetupCategory = key;
           this.allScoresAreZero = this.checkIfAllScoresAreZero();
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(scoringBtn, uploadBtn, modifyBtn);
+            this.setButtonTheme(scoringBtn, uploadBtn, modifyBtn, saveBtn);
+          }
+        } else if (key == 'save') {
+          this.selectedSetupCategory = key;
+          this.allScoresAreZero = this.checkIfAllScoresAreZero();
+          if (allBtnPresent) {
+            feather.replace();
+            this.setButtonTheme(saveBtn, scoringBtn, uploadBtn, modifyBtn);
           }
         } else if (key == 'close') {
           setupModal.style.display = 'none';
         }
       }
     });
-  } 
-
-  checkIfAllScoresAreZero():boolean{
-    return (this.rumblerInfo.filter((r:any) => r.score == 0)).length == 5;     
   }
-  
-  confirmScoreReset(key:string){
-      setTimeout(() => {
-        const modal = document.getElementById('confirmScoreResetModal');
-        if(modal){
-          if(key == 'open'){
-            (modal as HTMLElement).style.display = 'flex';
-            (modal as HTMLElement).style.backdropFilter = 'brightness(0.5)';
-          }
-          else if(key == 'close'){
-            (modal as HTMLElement).style.display = 'none';
-          }
+
+  checkIfAllScoresAreZero(): boolean {
+    return this.rumblerInfo.filter((r: any) => r.score == 0).length == 5;
+  }
+
+  confirmScoreReset(key: string) {
+    setTimeout(() => {
+      const modal = document.getElementById('confirmScoreResetModal');
+      if (modal) {
+        if (key == 'open') {
+          (modal as HTMLElement).style.display = 'flex';
+          (modal as HTMLElement).style.backdropFilter = 'brightness(0.5)';
+        } else if (key == 'close') {
+          (modal as HTMLElement).style.display = 'none';
         }
-      })
+      }
+    });
   }
 
-  controlScore(action:string,rumblerInfo?:any){    
-    if(action == 'minus'){      
+  controlScore(action: string, rumblerInfo?: any) {
+    if (action == 'minus') {
       const rumbler = this.rumblerInfo.find((r: any) => r.id == rumblerInfo.id);
       rumbler.score--;
-    }else if(action == 'plus'){      
+    } else if (action == 'plus') {
       const rumbler = this.rumblerInfo.find((r: any) => r.id == rumblerInfo.id);
       rumbler.score++;
-    } else if (action == 'reset'){
+    } else if (action == 'reset') {
       this.rumblerInfo.map((r: any) => {
         r.score = 0;
         return r;
-      })
+      });
       this.confirmScoreReset('close');
     }
     this.allScoresAreZero = this.checkIfAllScoresAreZero();
-    console.log("Rumbler Info: ", this.rumblerInfo);
+    console.log('Rumbler Info: ', this.rumblerInfo);
 
     localStorage.setItem('rumblerInfo', JSON.stringify(this.rumblerInfo));
   }
@@ -474,16 +493,37 @@ export class RumbleProperComponent implements OnInit {
             return d;
           });
 
-        this.saveEditedRallyQuestions();
+          this.saveEditedRallyQuestions();
         }
       }
     });
   }
 
-  saveEditedRallyQuestions(){
-    const mergedArray = [...this.questions1_to_10,...this.questions11_to_20,...this.questions21_to_30,...this.questions31_to_40,...this.questions41_to_50];
-    console.log("mergedArray", mergedArray);
-    localStorage.setItem('rallyQuestions',JSON.stringify(mergedArray));
+  saveEditedRallyQuestions() {
+    const mergedArray = [
+      ...this.questions1_to_10,
+      ...this.questions11_to_20,
+      ...this.questions21_to_30,
+      ...this.questions31_to_40,
+      ...this.questions41_to_50,
+    ];
+    console.log('mergedArray', mergedArray);
+    localStorage.setItem('rallyQuestions', JSON.stringify(mergedArray));
     this.editQuestion('close');
   }
+
+  saveGameData() {
+    const mergedArray = [
+      ...this.questions1_to_10,
+      ...this.questions11_to_20,
+      ...this.questions21_to_30,
+      ...this.questions31_to_40,
+      ...this.questions41_to_50,
+    ];
+
+    const dateNow = this.datePipe.transform(new Date(), 'yyyyMMdd hhmma');
+    this.convertToCSV(`Rumble_Questions_${dateNow}.csv`,mergedArray);
+    this.convertToCSV(`Rumblers_${dateNow}.csv`,this.rumblerInfo);
+  }
+
 }

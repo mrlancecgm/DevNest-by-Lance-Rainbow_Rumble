@@ -14,6 +14,52 @@
       START NEW RUMBLE
     </button>
 
-    <button class="metallic-button">LOAD SAVED RUMBLE</button>
+    <button (click)="loadSavedGame('open')" class="metallic-button">
+      LOAD SAVED RUMBLE
+    </button>
+  </div>
+</div>
+
+<div class="modal" id="loadSavedGameModal">
+  <div class="modal-dialog">
+    <div
+      class="modal-content"
+      style="width: 600px; justify-self: center; height: 500px"
+    >
+      <div class="modal-header">
+        <h4 class="modal-title">LOAD SAVED GAME</h4>
+        <button
+          (click)="loadSavedGame('close')"
+          type="button"
+          class="btn-close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="width: 100%; flex-direction: column;height: 100%;"
+        >
+          <div class="col-12 d-flex justify-content-center">
+            <button
+                class="btn btn-primary"
+                style="padding: 10px 20px; width: 50%"
+              >
+                <i data-feather="help-circle"></i>
+                <span style="margin-left: 10px">Browse Questions File</span>
+              </button>
+          </div>
+          <div class="col-12 d-flex justify-content-center mt-2">
+            <button
+                class="btn btn-primary"
+                style="padding: 10px 20px; width: 50%"
+              >
+                <i data-feather="users"></i>
+                <span style="margin-left: 10px">Browse Rumblers File</span>
+              </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

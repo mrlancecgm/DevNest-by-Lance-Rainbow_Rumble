@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { MainMenuComponent } from './main-menu/main-menu.component';
 import { ApplicationRoutingModule } from './application-routing.module';
 import { RumbleSetupComponent } from './rumble-setup/rumble-setup.component';
@@ -20,6 +20,6 @@ import { RallyQuestionComponent } from './rally-question/rally-question.componen
     ApplicationRoutingModule,
     FormsModule
   ],
-  // providers: [NgbModal]
+  providers: [DatePipe]
 })
 export class ApplicationModule { }

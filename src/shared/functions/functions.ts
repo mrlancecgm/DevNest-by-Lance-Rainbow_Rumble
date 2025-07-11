@@ -42,3 +42,36 @@ export function csvToJson(csv: string): any[] {
     return obj;
   });
 }
+
+export function convertToCSV(fileName:string,convertToCsvArray:any[]):string {
+    var array: any = [];
+    for (let i = 0; i < convertToCsvArray.length; i++) {
+      var o;
+      var newArry: any = [];
+      for (o in convertToCsvArray[i]) {
+        newArry.push(o);
+      }
+      break;
+    }
+    array.push(newArry);
+    for (let i = 0; i < convertToCsvArray.length; i++) {
+      array.push(Object.values(convertToCsvArray[i]));
+    }
+    var CsvString = "";
+    array.forEach((RowItem: any) => {
+      RowItem.forEach((colItem: any) => {
+        const removednullItem = colItem === null ? "" : colItem;
+        const replacedCommaItem = removednullItem.toString().replace(/,/g, "");
+        CsvString += replacedCommaItem + ",";
+      });
+      CsvString += "\r\n";
+    });
+    CsvString = "data:application/csv, " + encodeURIComponent(CsvString);
+    var x = document.createElement("a");
+    x.setAttribute("href", CsvString);
+    x.setAttribute("download", fileName);
+    document.body.appendChild(x);
+    x.click();
+    array = [];
+    return CsvString;
+  }
