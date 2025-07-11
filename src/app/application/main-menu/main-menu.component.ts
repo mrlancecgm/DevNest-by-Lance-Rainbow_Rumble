@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import * as feather from 'feather-icons';
+import { clearAppData, extractCsvsFromZip } from '../../../shared/functions/functions';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-menu',
@@ -12,6 +14,8 @@ export class MainMenuComponent {
     'assets/logo/rainbow-rumble-transparent.png';
   public backupQuestions:any;
   public backupRumblers:any;
+
+  constructor(private router: Router){}
 
   loadSavedGame(key: string) {
     const modal = document.getElementById('loadSavedGameModal');
@@ -28,6 +32,18 @@ export class MainMenuComponent {
   }
 
   ngAfterViewInit(){
+    clearAppData();
     feather.replace();
   }
+
+  handleZipUpload(event: Event) {
+  extractCsvsFromZip(event).then(data => {
+    console.log('Extracted CSV JSON data:', data);
+    sessionStorage.setItem('loadExisting','true');
+    this.router.navigate(['/application/rumble-proper']);
+  }).catch(err => {
+    console.error(err);
+  });
+}
+
 }

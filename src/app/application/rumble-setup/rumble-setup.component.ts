@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { uploadRallyQuestions } from '../../../shared/functions/functions';
+import { clearAppData, uploadRallyQuestions } from '../../../shared/functions/functions';
 
 @Component({
   selector: 'app-rumble-setup',
@@ -58,13 +58,7 @@ export class RumbleSetupComponent implements OnInit {
 
   @ViewChild('rumblerName') rumblerName!: ElementRef;
 
-  ngOnInit(): void {
-    const rumblerInfo = localStorage.getItem('rumblerInfo');
-    // if(!rumblerInfo){
-    //   let stringInfo = JSON.stringify(this.rumblerInfo);
-    //   localStorage.setItem('rumblerInfo',stringInfo);
-    // }
-  }
+  ngOnInit(): void {}
 
   configRumbler(event: any, code: string) {
     console.log('Event: ', event);
@@ -80,6 +74,10 @@ export class RumbleSetupComponent implements OnInit {
         r.isActive = true;
       }
     });
+  }
+
+  ngAfterViewInit(){
+    clearAppData();
   }
 
   submitName() {

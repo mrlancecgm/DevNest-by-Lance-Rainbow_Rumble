@@ -66,27 +66,22 @@
       "
     >
       &nbsp;
-      <img
-        style="cursor: pointer"
-        routerLink="/application/main-menu"
-        [src]="rainbowRumbleLogo"
-        width="20%"
-      />
-      <div class="d-flex justify-content-between"> 
+      <img style="cursor: pointer" [src]="rainbowRumbleLogo" width="20%" />
+      <div class="d-flex justify-content-between">
         <img
-        (click)="setupRally('open')"
-        class="setup-icon"
-        [src]="setupIcon"
-        width="50px"
-      />
-      <img
-        style="margin-left: 10px;"
-        class="setup-icon"
-        [src]="exitIcon"
-        width="50px"
-      />
+          (click)="setupRally('open')"
+          class="setup-icon"
+          [src]="setupIcon"
+          width="50px"
+        />
+        <img
+          style="margin-left: 10px"
+          class="setup-icon"
+          (click)="quitGame('open')"
+          [src]="exitIcon"
+          width="50px"
+        />
       </div>
-      
     </div>
 
     <div class="rally-board-row">
@@ -323,7 +318,7 @@
               <input
                 type="file"
                 #file
-                (change)="updateRallyQuestions($event)"
+                (change)="updateRallyQuestions($event, false)"
                 hidden
                 accept="text/csv"
               />
@@ -358,7 +353,7 @@
                   {{ q.questionId }}
                 </div>
                 <div
-                  class="d-flex justify-content-center align-items-center question-statement"
+                  class="d-flex justify-content-start align-items-center question-statement"
                   [style.color]="q.statement ? '#000' : '#737373'"
                 >
                   {{ q.statement ? q.statement : "No question." }}
@@ -375,7 +370,7 @@
                   {{ q.questionId }}
                 </div>
                 <div
-                  class="d-flex justify-content-center align-items-center question-statement"
+                  class="d-flex justify-content-start align-items-center question-statement"
                   [style.color]="q.statement ? '#000' : '#737373'"
                 >
                   {{ q.statement ? q.statement : "No question." }}
@@ -392,7 +387,7 @@
                   {{ q.questionId }}
                 </div>
                 <div
-                  class="d-flex justify-content-center align-items-center question-statement"
+                  class="d-flex justify-content-start align-items-center question-statement"
                   [style.color]="q.statement ? '#000' : '#737373'"
                 >
                   {{ q.statement ? q.statement : "No question." }}
@@ -409,7 +404,7 @@
                   {{ q.questionId }}
                 </div>
                 <div
-                  class="d-flex justify-content-center align-items-center question-statement"
+                  class="d-flex justify-content-start align-items-center question-statement"
                   [style.color]="q.statement ? '#000' : '#737373'"
                 >
                   {{ q.statement ? q.statement : "No question." }}
@@ -426,7 +421,7 @@
                   {{ q.questionId }}
                 </div>
                 <div
-                  class="d-flex justify-content-center align-items-center question-statement"
+                  class="d-flex justify-content-start align-items-center question-statement"
                   [style.color]="q.statement ? '#000' : '#737373'"
                 >
                   {{ q.statement ? q.statement : "No question." }}
@@ -506,7 +501,7 @@
             <div
               class="category-content"
               *ngIf="selectedSetupCategory === 'save'"
-            >              
+            >
               <img [src]="saveIcon" width="20%" class="mb-2" />
               <button
                 (click)="saveGameData()"
@@ -593,6 +588,108 @@
           data-bs-dismiss="modal"
         >
           Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="confirmGameExitModal">
+  <div class="modal-dialog">
+    <div
+      class="modal-content"
+      style="width: fit-content; justify-self: center; height: fit-content"
+    >
+      <div class="modal-header">
+        <h4 class="modal-title">EXIT CONFIRMATION</h4>
+        <button
+          (click)="quitGame('close')"
+          type="button"
+          class="btn-close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="d-flex justify-content-between" style="width: 100%">
+          <span
+            >Your current game progress will be lost. Do you wish to save it
+            first before quitting?</span
+          >
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          (click)="quitGame('exit')"
+          type="button"
+          class="btn btn-danger"
+          data-bs-dismiss="modal"
+        >
+          Exit Only
+        </button>
+        <button
+          (click)="quitGame('save-and-exit')"
+          type="button"
+          class="btn btn-success"
+          data-bs-dismiss="modal"
+        >
+          Save and Exit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="questionInitialSetupModal">
+  <div class="modal-dialog">
+    <div
+      class="modal-content"
+      style="width: fit-content; justify-self: center; height: fit-content"
+    >
+      <div class="modal-header">
+        <h4 class="modal-title">UPLOAD QUESTIONS</h4>        
+      </div>
+
+      <div class="modal-body">
+        <div class="d-flex justify-content-between" style="width: 100%;flex-direction: column;">
+          <span style="margin-bottom: 30px;"
+            >No question data uploaded yet. Please upload a question CSV file to proceed.</span
+          >
+
+          <div class="category-content">
+            <input
+              type="file"
+              #file
+              (change)="updateRallyQuestions($event, true)"
+              hidden
+              accept="text/csv"
+            />
+            <img [src]="fileBrowseIcon" width="20%" class="mb-2" />
+            <button
+              (click)="file.click()"
+              class="btn btn-primary"
+              [style.background]="uploadSuccessful ? '#1e5019' : '#0d6dfc'"
+              style="padding: 10px 20px; width: 40%"
+            >
+              <!-- <i data-feather="file-plus"></i
+                > -->
+              <span style="margin-left: 10px">{{ uploadLabel }}</span>
+            </button>
+            <span style="font-style: oblique; color: grey"
+              >Accepts only CSV files</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          (click)="questionInitialSetup('return')"
+          type="button"
+          class="btn btn-danger"
+          data-bs-dismiss="modal"
+        >
+          Return to Main Menu
         </button>
       </div>
     </div>

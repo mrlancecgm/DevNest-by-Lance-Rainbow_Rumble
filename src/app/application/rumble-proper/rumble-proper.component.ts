@@ -1,5 +1,6 @@
 import {
   Component,
+  ComponentFactoryResolver,
   OnInit,
   setTestabilityGetter,
   ViewEncapsulation,
@@ -7,13 +8,21 @@ import {
 
 import {
   convertToCSV,
+  convertToCsv2,
   uploadRallyQuestions,
+  csvToJson,
+  arrayToJson,
+  convertJsonToCsv,
+  clearAppData,
 } from '../../../shared/functions/functions';
 import * as feather from 'feather-icons';
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import * as fs from 'fs';
 import { DatePipe } from '@angular/common';
+import { style } from '@angular/animations';
+import { Router } from '@angular/router';
+import { resolve } from 'path';
 
 @Component({
   selector: 'app-rumble-proper',
@@ -32,7 +41,10 @@ export class RumbleProperComponent implements OnInit {
   public animateCard: boolean = false;
   public uploadLabel: string = 'Browse File';
   public uploadRallyQuestions = uploadRallyQuestions;
-  public convertToCSV = convertToCSV;
+  public arrayToJson = arrayToJson;
+  public convertToCsv = convertToCsv2;
+  public csvToJson = csvToJson;
+  public convertJsonToCsv = convertJsonToCsv;
 
   public currentQuestion: any = {
     questionId: null,
@@ -100,22 +112,92 @@ export class RumbleProperComponent implements OnInit {
     },
   ];
 
-  constructor(private datePipe: DatePipe) {}
+  constructor(private datePipe: DatePipe, private router: Router) {}
 
   ngOnInit(): void {
     const rumblerInfo = localStorage.getItem('rumblerInfo');
     if (rumblerInfo) {
       this.rumblerInfo = JSON.parse(rumblerInfo);
     }
-
-    this.generateQuestions();
   }
 
-  generateQuestions() {
+  questionInitialSetup(key: string) {
+    console.log('Key: ', key);
+    setTimeout(() => {
+      const modal = document.getElementById('questionInitialSetupModal');
+
+      if (modal) {
+        console.log('modal');
+        if (key == 'open') {
+          (modal as HTMLElement).style.display = 'flex';
+          (modal as HTMLElement).style.backdropFilter = 'brightness(0.5)';
+        } else if (key == 'close') {
+          (modal as HTMLElement).style.display = 'none';
+        } else if (key == 'return') {
+          console.log('return...');
+          this.questionInitialSetup('close');
+          clearAppData();
+          this.router.navigate(['/application/main-menu']);
+        }
+      }
+    });
+  }
+
+  quitGame(key: string) {
+    setTimeout(() => {
+      const modal = document.getElementById('confirmGameExitModal');
+      if (modal) {
+        if (key == 'open') {
+          (modal as HTMLElement).style.display = 'flex';
+          (modal as HTMLElement).style.backdropFilter = 'brightness(0.5)';
+        } else if (key == 'close') {
+          (modal as HTMLElement).style.display = 'none';
+        } else if (key == 'exit') {
+          this.router.navigate(['/application/main-menu']);
+          clearAppData();
+        } else if (key == 'save-and-exit') {
+          this.saveGameData().then(() => {
+            this.quitGame('exit');
+          });
+        }
+      }
+    });
+  }
+
+  regenerateLoadedQuestions(loadedData: any[]) {
+    console.log('Loaded Data: ', loadedData);
+    loadedData.map((d: any) => {
+      d.isDone = d.isDone === 'true' ? true : false;
+      return d;
+    });
+
+    loadedData.forEach((d: any) => {
+      if (d.questionId >= 1 && d.questionId <= 10) {
+        this.questions1_to_10.push(d);
+      } else if (d.questionId >= 11 && d.questionId <= 20) {
+        this.questions11_to_20.push(d);
+      } else if (d.questionId >= 21 && d.questionId <= 30) {
+        this.questions21_to_30.push(d);
+      } else if (d.questionId >= 31 && d.questionId <= 40) {
+        this.questions31_to_40.push(d);
+      } else if (d.questionId >= 41 && d.questionId <= 50) {
+        this.questions41_to_50.push(d);
+      }
+    });
+
+    this.saveMergedArray();
+
+    console.log('Q1to10: ', this.questions1_to_10);
+    console.log('Q11to20: ', this.questions11_to_20);
+    console.log('Q21to30: ', this.questions21_to_30);
+    console.log('Q31to40: ', this.questions31_to_40);
+    console.log('Q41to50: ', this.questions41_to_50);
+  }
+
+  generateQuestions(isInitialSetup?: boolean) {
     for (let i = 1; i <= 10; i++) {
       let q_config: any = {
         questionId: i,
-        statement: null,
         isDone: false,
       };
       this.questions1_to_10.push(q_config);
@@ -123,7 +205,6 @@ export class RumbleProperComponent implements OnInit {
     for (let i = 11; i <= 20; i++) {
       let q_config: any = {
         questionId: i,
-        statement: null,
         isDone: false,
       };
       this.questions11_to_20.push(q_config);
@@ -131,7 +212,6 @@ export class RumbleProperComponent implements OnInit {
     for (let i = 21; i <= 30; i++) {
       let q_config: any = {
         questionId: i,
-        statement: null,
         isDone: false,
       };
       this.questions21_to_30.push(q_config);
@@ -139,7 +219,6 @@ export class RumbleProperComponent implements OnInit {
     for (let i = 31; i <= 40; i++) {
       let q_config: any = {
         questionId: i,
-        statement: null,
         isDone: false,
       };
       this.questions31_to_40.push(q_config);
@@ -147,17 +226,32 @@ export class RumbleProperComponent implements OnInit {
     for (let i = 41; i <= 50; i++) {
       let q_config: any = {
         questionId: i,
-        statement: null,
         isDone: false,
       };
       this.questions41_to_50.push(q_config);
     }
+
+    // if(!isInitialSetup){
+    //   this.saveMergedArray();
+    // }
 
     console.log('Q1to10: ', this.questions1_to_10);
     console.log('Q11to20: ', this.questions11_to_20);
     console.log('Q21to30: ', this.questions21_to_30);
     console.log('Q31to40: ', this.questions31_to_40);
     console.log('Q41to50: ', this.questions41_to_50);
+  }
+
+  saveMergedArray() {
+    const mergedArray = [
+      ...this.questions1_to_10,
+      ...this.questions11_to_20,
+      ...this.questions21_to_30,
+      ...this.questions31_to_40,
+      ...this.questions41_to_50,
+    ];
+
+    localStorage.setItem('rallyQuestions', JSON.stringify(mergedArray));
   }
 
   openModal(questionBox: any) {
@@ -267,9 +361,29 @@ export class RumbleProperComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit() {
-    this.dissminateQuestions();
+  initialChecks() {
+    const loadExisting = sessionStorage.getItem('loadExisting');
+    const rallyQuestions = localStorage.getItem('rallyQuestions');
+    console.log('loadExisting', loadExisting);
+    if (!loadExisting) {
+      if (rallyQuestions) {
+        this.generateQuestions(true);
+        this.dissminateQuestions();
+      } else {
+        this.questionInitialSetup('open');
+      }
+    } else {
+      console.log('Rally Questions: ', rallyQuestions);
+      if (rallyQuestions) {
+        this.regenerateLoadedQuestions(JSON.parse(rallyQuestions));
+      }
+    }
+
     feather.replace();
+  }
+
+  ngAfterViewInit() {
+    this.initialChecks();
   }
 
   dissminateQuestions() {
@@ -277,7 +391,9 @@ export class RumbleProperComponent implements OnInit {
     if (rallyQuestions) {
       console.log('Rally Questions: ', JSON.parse(rallyQuestions));
       let q_array: any[] = JSON.parse(rallyQuestions);
+      console.log('q_array: ', q_array);
       q_array.forEach((q: any) => {
+        console.log('Q: ', q);
         if (q.questionId >= 1 && q.questionId <= 10) {
           this.questions1_to_10.forEach((a: any) => {
             if (a.questionId == q.questionId) {
@@ -322,15 +438,22 @@ export class RumbleProperComponent implements OnInit {
     }
   }
 
-  updateRallyQuestions(event: any) {
+  updateRallyQuestions(event: any, isInitialSetup: boolean) {
     this.uploadInProgress = true;
     this.uploadLabel = 'Uploading...';
     this.uploadRallyQuestions(event).then(() => {
-      this.dissminateQuestions();
+      if (!isInitialSetup) {
+        this.dissminateQuestions();
+      }
       setTimeout(() => {
         this.uploadInProgress = false;
         this.uploadSuccessful = true;
         this.uploadLabel = 'Uploaded!';
+        if (isInitialSetup) {
+          this.initialChecks();
+          this.questionInitialSetup('close');
+        }
+
         setTimeout(() => {
           this.uploadSuccessful = false;
           this.uploadLabel = 'Browse File';
@@ -512,18 +635,31 @@ export class RumbleProperComponent implements OnInit {
     this.editQuestion('close');
   }
 
-  saveGameData() {
-    const mergedArray = [
-      ...this.questions1_to_10,
-      ...this.questions11_to_20,
-      ...this.questions21_to_30,
-      ...this.questions31_to_40,
-      ...this.questions41_to_50,
-    ];
+  saveGameData(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const mergedArray = [
+        ...this.questions1_to_10,
+        ...this.questions11_to_20,
+        ...this.questions21_to_30,
+        ...this.questions31_to_40,
+        ...this.questions41_to_50,
+      ];
 
-    const dateNow = this.datePipe.transform(new Date(), 'yyyyMMdd hhmma');
-    this.convertToCSV(`Rumble_Questions_${dateNow}.csv`,mergedArray);
-    this.convertToCSV(`Rumblers_${dateNow}.csv`,this.rumblerInfo);
+      const zip = new JSZip();
+
+      const dateNow = this.datePipe.transform(new Date(), 'yyyyMMdd hhmma');
+
+      const csv_questions = this.convertToCsv(mergedArray);
+      const csv_rumblers = this.convertToCsv(this.rumblerInfo);
+
+      zip.file(`rallyquestions_${dateNow}.csv`, csv_questions);
+      zip.file(`rumblers_${dateNow}.csv`, csv_rumblers);
+
+      zip.generateAsync({ type: 'blob' }).then((content: Blob) => {
+        saveAs(content, `rainbowrumbledata_${dateNow}.zip`);
+      });
+
+      resolve();
+    });
   }
-
 }
