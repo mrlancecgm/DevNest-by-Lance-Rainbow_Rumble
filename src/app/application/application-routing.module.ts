@@ -5,6 +5,7 @@ import { RouterTestingHarness } from '@angular/router/testing';
 import { MainMenuComponent } from './main-menu/main-menu.component';
 import { RumbleSetupComponent } from './rumble-setup/rumble-setup.component';
 import { RumbleProperComponent } from './rumble-proper/rumble-proper.component';
+import { ColorDieComponent } from './color-die/color-die.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,10 @@ const routes: Routes = [
   {
     path: 'rumble-proper',
     component: RumbleProperComponent
+  },
+  {
+    path: 'color-die',
+    component: ColorDieComponent
   }
 ]
 
