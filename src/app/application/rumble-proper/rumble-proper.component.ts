@@ -46,7 +46,9 @@ export class RumbleProperComponent implements OnInit {
   public csvToJson = csvToJson;
   public convertJsonToCsv = convertJsonToCsv;
 
-  public interval:any;
+  public interval: any;
+  public count: number = 3;
+  public startCountdown: boolean = false;
 
   public currentQuestion: any = {
     questionId: null,
@@ -677,18 +679,18 @@ export class RumbleProperComponent implements OnInit {
     });
   }
   rollCube() {
-  const intervalTime = 1000;
+    const intervalTime = 1000;
 
-  this.interval = setInterval(() => {
-    const randomRotation = {
-      x: Math.floor(Math.random() * 360),
-      y: Math.floor(Math.random() * 360),
-    };
-    this.cubeStyle = {
-      transform: `rotateX(${randomRotation.x}deg) rotateY(${randomRotation.y}deg)`,
-    };
-  }, intervalTime);
-}
+    this.interval = setInterval(() => {
+      const randomRotation = {
+        x: Math.floor(Math.random() * 360),
+        y: Math.floor(Math.random() * 360),
+      };
+      this.cubeStyle = {
+        transform: `rotateX(${randomRotation.x}deg) rotateY(${randomRotation.y}deg)`,
+      };
+    }, intervalTime);
+  }
 
   // rollCube() {
   //   const rollDuration = 3000; // in ms
@@ -720,23 +722,34 @@ export class RumbleProperComponent implements OnInit {
   // }
 
   stopRolling() {
-  const stopDelay = 3000;
+    const stopDelay = 3000;
+    setTimeout(() => {
+      clearInterval(this.interval);
+      const randomFace =
+        this.faceTransforms[
+          Math.floor(Math.random() * this.faceTransforms.length)
+        ];
+      this.cubeStyle = {
+        transform: randomFace.transform,
+      };
+      this.resultColor = randomFace.color;
+      this.startCountdown = false;
+    }, stopDelay);
+  }
 
-  setTimeout(() => {
-    clearInterval(this.interval); // stop the infinite rolling
+  startThreeSecondCountdown(): void {    
+    this.startCountdown = true;
+    const countdownInterval = setInterval(() => {
+      console.log(this.count);
+      this.count--;
 
-    // Pick one face randomly as the "final" face
-    const randomFace =
-      this.faceTransforms[
-        Math.floor(Math.random() * this.faceTransforms.length)
-      ];
-    this.cubeStyle = {
-      transform: randomFace.transform,
-    };
-    this.resultColor = randomFace.color;
-  }, stopDelay);
-}
-
+      if (this.count === 0) {
+        clearInterval(countdownInterval);
+      this.count=3;
+        console.log('Countdown finished!');
+      }
+    }, 1000);
+  }
 
   colorDieModal(key: string) {
     setTimeout(() => {
@@ -746,11 +759,14 @@ export class RumbleProperComponent implements OnInit {
         console.log('modal');
         if (key == 'open') {
           this.rollCube();
-          (modal as HTMLElement).style.display = 'flex';
-          (modal as HTMLElement).style.backdropFilter = 'brightness(0.1)';
+          setTimeout(() => {
+            (modal as HTMLElement).style.display = 'flex';
+            // (modal as HTMLElement).style.position = 'relative';
+            (modal as HTMLElement).style.backdropFilter = 'brightness(0.1)';
+          }, 500);
         } else if (key == 'close') {
           (modal as HTMLElement).style.display = 'none';
-        } 
+        }
       }
     });
   }

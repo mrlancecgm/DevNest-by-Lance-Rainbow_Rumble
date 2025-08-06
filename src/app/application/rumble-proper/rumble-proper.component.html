@@ -729,7 +729,11 @@
           >
             x
           </span>
-          <div class="scene">
+          
+          <div class="scene" style="position:relative">
+            <div style="position: absolute;z-index:999;transform: translate(250px,250px);">
+            <button *ngIf="startCountdown" style="background-color: #fff;">{{ count }}</button>
+          </div>
             <div class="cube" [ngStyle]="cubeStyle">
               <div class="face front" style="background: red"></div>
               <div class="face back" style="background: blue"></div>
@@ -739,7 +743,7 @@
               <div class="face bottom" style="background: purple"></div>
             </div>
           </div>
-          <button (click)="stopRolling()">Stop Rolling</button>
+          <button (click)="stopRolling();startThreeSecondCountdown()">Stop Rolling</button>
           <p>Result: {{ resultColor }}</p>
         </div>
       </div>
