@@ -119,6 +119,13 @@ export class RumbleProperComponent implements OnInit {
   cubeStyle: any = {};
   resultColor: string = '';
 
+  private contextMenuHandler = (event: MouseEvent) => {
+    event.preventDefault();
+    this.stopRolling();
+    this.startThreeSecondCountdown();
+    console.log('Right-click detected on cube!');
+  };
+
   faceTransforms = [
     { transform: 'rotateX(0deg) rotateY(0deg)', color: 'red' }, // front
     { transform: 'rotateY(180deg)', color: 'blue' }, // back
@@ -678,6 +685,7 @@ export class RumbleProperComponent implements OnInit {
       resolve();
     });
   }
+  
   rollCube() {
     const intervalTime = 1000;
 
@@ -692,43 +700,17 @@ export class RumbleProperComponent implements OnInit {
     }, intervalTime);
   }
 
-  // rollCube() {
-  //   const rollDuration = 3000; // in ms
-  //   const intervalTime = 200;
-
-  //   let interval = setInterval(() => {
-  //     const randomRotation = {
-  //       x: Math.floor(Math.random() * 360),
-  //       y: Math.floor(Math.random() * 360),
-  //     };
-  //     this.cubeStyle = {
-  //       transform: `rotateX(${randomRotation.x}deg) rotateY(${randomRotation.y}deg)`,
-  //     };
-  //   }, intervalTime);
-
-  //   setTimeout(() => {
-  //     clearInterval(interval);
-
-  //     // Pick one face randomly as the "final" face
-  //     const randomFace =
-  //       this.faceTransforms[
-  //         Math.floor(Math.random() * this.faceTransforms.length)
-  //       ];
-  //     this.cubeStyle = {
-  //       transform: randomFace.transform,
-  //     };
-  //     this.resultColor = randomFace.color;
-  //   }, rollDuration);
-  // }
-
   stopRolling() {
     const stopDelay = 3000;
+
     setTimeout(() => {
       clearInterval(this.interval);
+
       const randomFace =
         this.faceTransforms[
           Math.floor(Math.random() * this.faceTransforms.length)
         ];
+
       this.cubeStyle = {
         transform: randomFace.transform,
       };
@@ -737,37 +719,45 @@ export class RumbleProperComponent implements OnInit {
     }, stopDelay);
   }
 
-  startThreeSecondCountdown(): void {    
+  startThreeSecondCountdown(): void {
+    if (this.startCountdown) return;
+
     this.startCountdown = true;
+    this.count = 3;
+
     const countdownInterval = setInterval(() => {
       console.log(this.count);
       this.count--;
 
       if (this.count === 0) {
         clearInterval(countdownInterval);
-      this.count=3;
+        this.count = 3;
+        this.startCountdown = false;
         console.log('Countdown finished!');
       }
     }, 1000);
   }
 
   colorDieModal(key: string) {
-    setTimeout(() => {
-      const modal = document.getElementById('colorDieModal');
+    const modal = document.getElementById('colorDieModal');
 
-      if (modal) {
-        console.log('modal');
-        if (key == 'open') {
-          this.rollCube();
-          setTimeout(() => {
-            (modal as HTMLElement).style.display = 'flex';
-            // (modal as HTMLElement).style.position = 'relative';
-            (modal as HTMLElement).style.backdropFilter = 'brightness(0.1)';
-          }, 500);
-        } else if (key == 'close') {
-          (modal as HTMLElement).style.display = 'none';
-        }
-      }
-    });
+    if (!modal) return;
+
+    if (key === 'open') {
+      this.rollCube();
+
+      setTimeout(() => {
+        const el = modal as HTMLElement;
+        el.style.display = 'flex';
+        el.style.backdropFilter = 'brightness(0.1)';
+
+        modal.addEventListener('contextmenu', this.contextMenuHandler);
+      }, 0);
+    } else if (key === 'close') {
+      const el = modal as HTMLElement;
+      el.style.display = 'none';
+
+      modal.removeEventListener('contextmenu', this.contextMenuHandler);
+    }
   }
 }

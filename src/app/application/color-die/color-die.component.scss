@@ -12,6 +12,9 @@
   transform-style: preserve-3d;
   transition: transform 1s ease-in-out;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .face {

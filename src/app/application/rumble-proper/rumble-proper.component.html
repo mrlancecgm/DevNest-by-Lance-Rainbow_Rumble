@@ -719,32 +719,95 @@
 
       <div class="modal-body">
         <div
-          class="d-flex justify-content-between"
-          style="width: 100%; height:100%; flex-direction: column"
+          class="d-flex justify-content-center"
+          style="width: 100%; height: 100%; flex-direction: column"
         >
           <span
             (click)="colorDieModal('close')"
             type="button"
-            style="color: #fff; align-self: flex-end;"
+            style="color: #fff; align-self: flex-end"
           >
             x
           </span>
-          
-          <div class="scene" style="position:relative">
-            <div style="position: absolute;z-index:999;transform: translate(250px,250px);">
-            <button *ngIf="startCountdown" style="background-color: #fff;">{{ count }}</button>
-          </div>
+
+          <div class="scene" style="position: relative">
+            <div
+              style="
+                position: absolute;
+                z-index: 999;
+                transform: translate(250px, 250px);
+              "
+            >
+              <div
+                *ngIf="startCountdown"
+                class="rally-board-box"
+                [style.background]="'#fff'"
+              >
+                <span style="font-size: xx-large">{{ count }}</span>
+              </div>
+            </div>
             <div class="cube" [ngStyle]="cubeStyle">
-              <div class="face front" style="background: red"></div>
-              <div class="face back" style="background: blue"></div>
-              <div class="face right" style="background: green"></div>
-              <div class="face left" style="background: yellow"></div>
-              <div class="face top" style="background: rgb(189, 6, 119)"></div>
-              <div class="face bottom" style="background: purple"></div>
+              <div
+                class="d-flex justify-content-center align-items-center face front"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center color-die-fill"
+                  [style.background]="'red'"
+                >
+                  <div class="d-flex color-die-outline"></div>
+                </div>
+              </div>
+              <div
+                class="d-flex justify-content-center align-items-center face back"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center color-die-fill"
+                  [style.background]="'blue'"
+                >
+                  <div class="d-flex color-die-outline"></div>
+                </div>
+              </div>
+              <div
+                class="d-flex justify-content-center align-items-center face right"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center color-die-fill"
+                  [style.background]="'green'"
+                >
+                  <div class="d-flex color-die-outline"></div>
+                </div>
+              </div>
+              <div
+                class="d-flex justify-content-center align-items-center face left"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center color-die-fill"
+                  [style.background]="'yellow'"
+                >
+                  <div class="d-flex color-die-outline"></div>
+                </div>
+              </div>
+              <div
+                class="d-flex justify-content-center align-items-center face top"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center color-die-fill"
+                  [style.background]="'rgb(189, 6, 119)'"
+                >
+                  <div class="d-flex color-die-outline"></div>
+                </div>
+              </div>
+              <div
+                class="d-flex justify-content-center align-items-center face bottom"
+              >
+                <div
+                  class="d-flex justify-content-center align-items-center color-die-fill"
+                  [style.background]="'purple'"
+                >
+                  <div class="d-flex color-die-outline"></div>
+                </div>
             </div>
           </div>
-          <button (click)="stopRolling();startThreeSecondCountdown()">Stop Rolling</button>
-          <p>Result: {{ resultColor }}</p>
         </div>
       </div>
     </div>

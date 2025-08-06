@@ -278,7 +278,7 @@
 .scene {
   width: 500px;
   height: 500px;
-  perspective: 1200px;
+  perspective: 1000px;
   margin: 50px auto;
 }
 
@@ -289,6 +289,9 @@
   transform-style: preserve-3d;
   transition: transform 1s ease-in-out;
   margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .face {
@@ -296,24 +299,47 @@
   width: 500px;
   height: 500px;
   opacity: 1;
-  border: 1px solid #333;
+  border: none; 
+  background: #fff;
+  border-radius: 50px; 
 }
 
 .front {
-  transform: rotateY(0deg) translateZ(250px);
+  transform: rotateY(0deg) translateZ(250px); 
 }
+
 .back {
   transform: rotateY(180deg) translateZ(250px);
 }
+
 .right {
   transform: rotateY(90deg) translateZ(250px);
 }
+
 .left {
-  transform: rotateY(-90deg) translateZ(250px);
+  transform: rotateY(-90deg) translateZ(250px); 
 }
+
 .top {
-  transform: rotateX(90deg) translateZ(250px);
+  transform: rotateX(90deg) translateZ(250px); 
 }
+
 .bottom {
-  transform: rotateX(-90deg) translateZ(250px);
+  transform: rotateX(-90deg) translateZ(250px); 
 }
+
+.color-die-fill {
+  border-radius: 50%;
+  width: 450px;
+  height: 450px;
+  backface-visibility: hidden;
+}
+
+.color-die-outline {
+  background: transparent;
+  border-radius: 50%;
+  width: 400px;
+  height: 400px;
+  outline: 10px solid #fff;
+}
+
