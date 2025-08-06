@@ -46,6 +46,8 @@ export class RumbleProperComponent implements OnInit {
   public csvToJson = csvToJson;
   public convertJsonToCsv = convertJsonToCsv;
 
+  public interval:any;
+
   public currentQuestion: any = {
     questionId: null,
     statement: null,
@@ -110,6 +112,18 @@ export class RumbleProperComponent implements OnInit {
       isActive: false,
       score: 0,
     },
+  ];
+
+  cubeStyle: any = {};
+  resultColor: string = '';
+
+  faceTransforms = [
+    { transform: 'rotateX(0deg) rotateY(0deg)', color: 'red' }, // front
+    { transform: 'rotateY(180deg)', color: 'blue' }, // back
+    { transform: 'rotateY(-90deg)', color: 'green' }, // right
+    { transform: 'rotateY(90deg)', color: 'yellow' }, // left
+    { transform: 'rotateX(-90deg)', color: 'pink' }, // top
+    { transform: 'rotateX(90deg)', color: 'purple' }, // bottom
   ];
 
   constructor(private datePipe: DatePipe, private router: Router) {}
@@ -660,6 +674,84 @@ export class RumbleProperComponent implements OnInit {
       });
 
       resolve();
+    });
+  }
+  rollCube() {
+  const intervalTime = 1000;
+
+  this.interval = setInterval(() => {
+    const randomRotation = {
+      x: Math.floor(Math.random() * 360),
+      y: Math.floor(Math.random() * 360),
+    };
+    this.cubeStyle = {
+      transform: `rotateX(${randomRotation.x}deg) rotateY(${randomRotation.y}deg)`,
+    };
+  }, intervalTime);
+}
+
+  // rollCube() {
+  //   const rollDuration = 3000; // in ms
+  //   const intervalTime = 200;
+
+  //   let interval = setInterval(() => {
+  //     const randomRotation = {
+  //       x: Math.floor(Math.random() * 360),
+  //       y: Math.floor(Math.random() * 360),
+  //     };
+  //     this.cubeStyle = {
+  //       transform: `rotateX(${randomRotation.x}deg) rotateY(${randomRotation.y}deg)`,
+  //     };
+  //   }, intervalTime);
+
+  //   setTimeout(() => {
+  //     clearInterval(interval);
+
+  //     // Pick one face randomly as the "final" face
+  //     const randomFace =
+  //       this.faceTransforms[
+  //         Math.floor(Math.random() * this.faceTransforms.length)
+  //       ];
+  //     this.cubeStyle = {
+  //       transform: randomFace.transform,
+  //     };
+  //     this.resultColor = randomFace.color;
+  //   }, rollDuration);
+  // }
+
+  stopRolling() {
+  const stopDelay = 3000;
+
+  setTimeout(() => {
+    clearInterval(this.interval); // stop the infinite rolling
+
+    // Pick one face randomly as the "final" face
+    const randomFace =
+      this.faceTransforms[
+        Math.floor(Math.random() * this.faceTransforms.length)
+      ];
+    this.cubeStyle = {
+      transform: randomFace.transform,
+    };
+    this.resultColor = randomFace.color;
+  }, stopDelay);
+}
+
+
+  colorDieModal(key: string) {
+    setTimeout(() => {
+      const modal = document.getElementById('colorDieModal');
+
+      if (modal) {
+        console.log('modal');
+        if (key == 'open') {
+          this.rollCube();
+          (modal as HTMLElement).style.display = 'flex';
+          (modal as HTMLElement).style.backdropFilter = 'brightness(0.1)';
+        } else if (key == 'close') {
+          (modal as HTMLElement).style.display = 'none';
+        } 
+      }
     });
   }
 }

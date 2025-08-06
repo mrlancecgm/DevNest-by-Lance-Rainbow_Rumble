@@ -274,3 +274,46 @@
 .score-control-button:hover {
   transform: scale(1.05);
 }
+
+.scene {
+  width: 500px;
+  height: 500px;
+  perspective: 1200px;
+  margin: 50px auto;
+}
+
+.cube {
+  width: 500px;
+  height: 500px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s ease-in-out;
+  margin: 0 auto;
+}
+
+.face {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  opacity: 1;
+  border: 1px solid #333;
+}
+
+.front {
+  transform: rotateY(0deg) translateZ(250px);
+}
+.back {
+  transform: rotateY(180deg) translateZ(250px);
+}
+.right {
+  transform: rotateY(90deg) translateZ(250px);
+}
+.left {
+  transform: rotateY(-90deg) translateZ(250px);
+}
+.top {
+  transform: rotateX(90deg) translateZ(250px);
+}
+.bottom {
+  transform: rotateX(-90deg) translateZ(250px);
+}
