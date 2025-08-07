@@ -301,31 +301,67 @@
   opacity: 1;
   border: none; 
   background: #fff;
-  border-radius: 50px; 
+  border-radius: 40px; 
+  box-shadow:inset 0 0 100px #ccc;
 }
 
 .front {
   transform: rotateY(0deg) translateZ(250px); 
 }
 
+.front.inner {
+  transform: rotateY(0deg) translateZ(248px); 
+}
+
 .back {
   transform: rotateY(180deg) translateZ(250px);
+}
+
+.back.inner {
+  transform: rotateY(180deg) translateZ(248px);
 }
 
 .right {
   transform: rotateY(90deg) translateZ(250px);
 }
 
+.right.inner {
+  transform: rotateY(90deg) translateZ(248px);
+}
+
 .left {
   transform: rotateY(-90deg) translateZ(250px); 
+}
+
+.left.inner {
+  transform: rotateY(-90deg) translateZ(248px); 
 }
 
 .top {
   transform: rotateX(90deg) translateZ(250px); 
 }
 
+.top.inner {
+  transform: rotateX(90deg) translateZ(248px); 
+}
+
 .bottom {
   transform: rotateX(-90deg) translateZ(250px); 
+}
+
+.bottom.inner {
+  transform: rotateX(-90deg) translateZ(248px); 
+}
+
+.cover {
+    border-radius: 0;
+    transform: translateZ(0px);
+}
+.cover.x {
+    transform: rotateY(90deg);
+}
+.cover.z {
+    transform: rotateX(90deg);
 }
 
 .color-die-fill {
@@ -341,5 +377,10 @@
   width: 400px;
   height: 400px;
   outline: 10px solid #fff;
+}
+
+.cover, .inner {
+  background: #e0e0e0;
+    box-shadow: none;
 }
 
