@@ -116,6 +116,106 @@ export class RumbleProperComponent implements OnInit {
     },
   ];
 
+  public color_tiles: any = {
+    row_one: [{
+      point: '+1',
+      color: ['red','blue','green'],
+      type: 'tri-color',
+      isLuckyTile: false,
+      owner: null
+    }],
+    row_two: [{
+      point: 'x3',
+      color: ['red','yellow','purple'],
+      type: 'tri-color',
+      isLuckyTile: false,
+      owner: null
+    },{
+      point: 'x3',
+      color: ['green','pink','blue'],
+      type: 'tri-color',
+      isLuckyTile: false,
+      owner: null
+    }],
+    row_three: [{
+      point: 'x2',
+      color: ['green','purple'],
+      type: 'dual-color',
+      isLuckyTile: false,
+      owner: null
+    },{
+      point: '+3',
+      color: ['blue'],
+      type: 'single-color',
+      isLuckyTile: false,
+      owner: null
+    },{
+      point: 'x2',
+      color: ['red','yellow'],
+      type: 'dual-color',
+      isLuckyTile: false,
+      owner: null
+    }],
+    row_four: [{
+      point: '-1',
+      color: ['blue'],
+      type: 'single-color',
+      isLuckyTile: false,
+      owner: null
+    },{
+      point: '+3',
+      color: ['yellow','purple'],
+      type: 'dual-color',
+      isLuckyTile: false,
+      owner: null
+    },{
+      point: 'x2',
+      color: ['red'],
+      type: 'single-color',
+      isLuckyTile: false,
+      owner: null
+    },{
+      point: '+1',
+      color: ['green','pink'],
+      type: 'dual-color',
+      isLuckyTile: false,
+      owner: null
+    }],
+    row_five: [{
+      point: '+1',
+      color: ['yellow'],
+      type: 'single-color',
+      isLuckyTile: false,
+      owner: null
+    },{
+      point: '+2',
+      color: ['green'],
+      type: 'single-color',
+      isLuckyTile: false,
+      owner: null
+    },{
+      point: '+1',
+      color: ['pink'],
+      type: 'single-color',
+      isLuckyTile: false,
+      owner: null
+    },{
+      point: '+2',
+      color: ['purple'],
+      type: 'single-color',
+      isLuckyTile: false,
+      owner: null
+    },{
+      point: '+1',
+      color: ['red','blue'],
+      type: 'dual-color',
+      isLuckyTile: false,
+      owner: null
+    }]
+  }
+
+  public colorTilesArray = Object.values(this.color_tiles);
+
   cubeStyle: any = {};
   resultColor: string = '';
 
@@ -142,6 +242,8 @@ export class RumbleProperComponent implements OnInit {
     if (rumblerInfo) {
       this.rumblerInfo = JSON.parse(rumblerInfo);
     }
+
+    console.log("CTA: ", this.colorTilesArray);
   }
 
   questionInitialSetup(key: string) {
@@ -759,5 +861,19 @@ export class RumbleProperComponent implements OnInit {
 
       modal.removeEventListener('contextmenu', this.contextMenuHandler);
     }
+  }
+
+  colorTilesModal(key:string){
+    setTimeout(() => {
+      const modal = document.getElementById('colorTilesModal');
+      if(modal){
+        if(key == 'open'){
+           modal.style.display = 'flex';
+            modal.style.backdropFilter = 'brightness(0.1)';
+        }else if(key == 'close'){
+          modal.style.display = 'none';
+        }
+      }
+    })
   }
 }
