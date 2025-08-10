@@ -21,6 +21,7 @@ export class RumbleSetupComponent implements OnInit {
       code: 'rumblerOne',
       isActive: false,
       score: 0,
+      tile_owned: null
     },
     {
       id: 2,
@@ -28,6 +29,7 @@ export class RumbleSetupComponent implements OnInit {
       code: 'rumblerTwo',
       isActive: false,
       score: 0,
+      tile_owned: null
     },
     {
       id: 3,
@@ -35,6 +37,7 @@ export class RumbleSetupComponent implements OnInit {
       code: 'rumblerThree',
       isActive: false,
       score: 0,
+      tile_owned: null
     },
     {
       id: 4,
@@ -42,6 +45,7 @@ export class RumbleSetupComponent implements OnInit {
       code: 'rumblerFour',
       isActive: false,
       score: 0,
+      tile_owned: null
     },
     {
       id: 5,
@@ -49,6 +53,7 @@ export class RumbleSetupComponent implements OnInit {
       code: 'rumblerFive',
       isActive: false,
       score: 0,
+      tile_owned: null
     },
   ];
 

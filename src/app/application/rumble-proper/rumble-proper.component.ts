@@ -85,6 +85,7 @@ export class RumbleProperComponent implements OnInit {
       code: 'rumblerOne',
       isActive: false,
       score: 0,
+      tile_owned: null
     },
     {
       id: 2,
@@ -92,6 +93,7 @@ export class RumbleProperComponent implements OnInit {
       code: 'rumblerTwo',
       isActive: false,
       score: 0,
+      tile_owned: null
     },
     {
       id: 3,
@@ -99,6 +101,7 @@ export class RumbleProperComponent implements OnInit {
       code: 'rumblerThree',
       isActive: false,
       score: 0,
+      tile_owned: null
     },
     {
       id: 4,
@@ -106,6 +109,7 @@ export class RumbleProperComponent implements OnInit {
       code: 'rumblerFour',
       isActive: false,
       score: 0,
+      tile_owned: null
     },
     {
       id: 5,
@@ -113,6 +117,7 @@ export class RumbleProperComponent implements OnInit {
       code: 'rumblerFive',
       isActive: false,
       score: 0,
+      tile_owned: null
     },
   ];
 
@@ -132,7 +137,7 @@ export class RumbleProperComponent implements OnInit {
       owner: null
     },{
       point: 'x3',
-      color: ['green','pink','blue'],
+      color: ['green','fuchsia','blue'],
       type: 'tri-color',
       isLuckyTile: false,
       owner: null
@@ -176,7 +181,7 @@ export class RumbleProperComponent implements OnInit {
       owner: null
     },{
       point: '+1',
-      color: ['green','pink'],
+      color: ['green','fuchsia'],
       type: 'dual-color',
       isLuckyTile: false,
       owner: null
@@ -195,7 +200,7 @@ export class RumbleProperComponent implements OnInit {
       owner: null
     },{
       point: '+1',
-      color: ['pink'],
+      color: ['fuchsia'],
       type: 'single-color',
       isLuckyTile: false,
       owner: null
@@ -216,8 +221,12 @@ export class RumbleProperComponent implements OnInit {
 
   public colorTilesArray = Object.values(this.color_tiles);
 
-  cubeStyle: any = {};
-  resultColor: string = '';
+  public cubeStyle: any = {};
+  public result_color: string = '';
+  public player_tile_assignment: any = {
+    tileColor: null,
+    tileOwner: null
+  }
 
   private contextMenuHandler = (event: MouseEvent) => {
     event.preventDefault();
@@ -509,6 +518,7 @@ export class RumbleProperComponent implements OnInit {
 
   ngAfterViewInit() {
     this.initialChecks();
+    localStorage.setItem("colorTileData",JSON.stringify(this.color_tiles));
   }
 
   dissminateQuestions() {
@@ -816,7 +826,7 @@ export class RumbleProperComponent implements OnInit {
       this.cubeStyle = {
         transform: randomFace.transform,
       };
-      this.resultColor = randomFace.color;
+      this.result_color = randomFace.color;
       this.startCountdown = false;
     }, stopDelay);
   }

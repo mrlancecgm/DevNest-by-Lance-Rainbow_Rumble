@@ -67,7 +67,11 @@
     >
       &nbsp;
       <img style="cursor: pointer" [src]="rainbowRumbleLogo" width="20%" />
-      <div class="d-flex justify-content-between">
+
+      <div class="d-flex align-items-center justify-content-center">
+        <div class="logo-wrapper setup-icon" (click)="colorTilesModal('open')">
+          <img src="../../../assets/logo/color_tile_logo.png" width="40" />
+        </div>
         <img
           (click)="setupRally('open')"
           class="setup-icon"
@@ -81,8 +85,6 @@
           [src]="exitIcon"
           width="50px"
         />
-        <button (click)="colorTilesModal('open')">Color Tile</button>
-        <button (click)="colorDieModal('open')">Color Die</button>
       </div>
     </div>
 
@@ -203,15 +205,6 @@
           padding: 15px;
         "
       >
-        <!-- <div class="modal-header">
-          <h4 class="modal-title">RALLY QUESTION {{ currentQuestion.questionId }}</h4>
-          <button
-            type="button"
-            class="btn-close"
-            (click)="closeModal('close')"
-          ></button>
-        </div> -->
-
         <div
           class="modal-body d-flex justify-content-center align-items-center"
         >
@@ -809,7 +802,7 @@
               >
                 <div
                   class="d-flex justify-content-center align-items-center color-die-fill"
-                  [style.background]="'rgb(189, 6, 119)'"
+                  [style.background]="'fuchsia'"
                 >
                   <div class="d-flex color-die-outline"></div>
                 </div>
@@ -862,7 +855,11 @@
           class="d-flex justify-content-center align-items-center"
           style="width: 100%; height: 100%; flex-direction: column"
         >
-          <span type="button" style="color: #fff; align-self: flex-end">
+          <span
+            (click)="colorTilesModal('close')"
+            type="button"
+            style="color: #fff; align-self: flex-end"
+          >
             x
           </span>
 
@@ -929,16 +926,18 @@
   let-tileColor="tileColor"
 >
   <div
+    style="position: relative"
     class="d-flex justify-content-center align-items-center"
     [ngStyle]="{
       width: '120px',
       height: '120px',
       borderRadius: '20px',
+      boxShadow: 'inset 0px 10px 20px #ccc',
       background: tileColor[0],
       margin: '5px'
     }"
   >
-  <h1 style="position: absolute;z-index:2">{{ tileData['point'] }}</h1>
+    <h1 style="position: absolute; z-index: 2">{{ tileData["point"] }}</h1>
     <div
       *ngIf="['dual-color', 'tri-color'].includes(tileData['type'])"
       class="d-flex justify-content-center align-items-center"
@@ -961,6 +960,10 @@
           margin: '5px'
         }"
       ></div>
+    </div>
+
+    <div class="tile-owner" *ngIf="tileData['owner']">
+      {{ tileData["owner"] }}
     </div>
   </div>
 </ng-template>
