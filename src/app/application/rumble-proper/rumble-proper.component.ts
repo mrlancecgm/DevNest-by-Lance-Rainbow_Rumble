@@ -85,7 +85,7 @@ export class RumbleProperComponent implements OnInit {
       code: 'rumblerOne',
       isActive: false,
       score: 0,
-      tile_owned: null
+      tile_owned: null,
     },
     {
       id: 2,
@@ -93,7 +93,7 @@ export class RumbleProperComponent implements OnInit {
       code: 'rumblerTwo',
       isActive: false,
       score: 0,
-      tile_owned: null
+      tile_owned: null,
     },
     {
       id: 3,
@@ -101,7 +101,7 @@ export class RumbleProperComponent implements OnInit {
       code: 'rumblerThree',
       isActive: false,
       score: 0,
-      tile_owned: null
+      tile_owned: null,
     },
     {
       id: 4,
@@ -109,7 +109,7 @@ export class RumbleProperComponent implements OnInit {
       code: 'rumblerFour',
       isActive: false,
       score: 0,
-      tile_owned: null
+      tile_owned: null,
     },
     {
       id: 5,
@@ -117,107 +117,187 @@ export class RumbleProperComponent implements OnInit {
       code: 'rumblerFive',
       isActive: false,
       score: 0,
-      tile_owned: null
+      tile_owned: null,
     },
   ];
 
   public color_tiles: any = {
-    row_one: [{
-      point: '+1',
-      color: ['red','blue','green'],
-      type: 'tri-color',
-      isLuckyTile: false,
-      owner: null
-    }],
-    row_two: [{
-      point: 'x3',
-      color: ['red','yellow','purple'],
-      type: 'tri-color',
-      isLuckyTile: false,
-      owner: null
-    },{
-      point: 'x3',
-      color: ['green','fuchsia','blue'],
-      type: 'tri-color',
-      isLuckyTile: false,
-      owner: null
-    }],
-    row_three: [{
-      point: 'x2',
-      color: ['green','purple'],
-      type: 'dual-color',
-      isLuckyTile: false,
-      owner: null
-    },{
-      point: '+3',
-      color: ['blue'],
-      type: 'single-color',
-      isLuckyTile: false,
-      owner: null
-    },{
-      point: 'x2',
-      color: ['red','yellow'],
-      type: 'dual-color',
-      isLuckyTile: false,
-      owner: null
-    }],
-    row_four: [{
-      point: '-1',
-      color: ['blue'],
-      type: 'single-color',
-      isLuckyTile: false,
-      owner: null
-    },{
-      point: '+3',
-      color: ['yellow','purple'],
-      type: 'dual-color',
-      isLuckyTile: false,
-      owner: null
-    },{
-      point: 'x2',
-      color: ['red'],
-      type: 'single-color',
-      isLuckyTile: false,
-      owner: null
-    },{
-      point: '+1',
-      color: ['green','fuchsia'],
-      type: 'dual-color',
-      isLuckyTile: false,
-      owner: null
-    }],
-    row_five: [{
-      point: '+1',
-      color: ['yellow'],
-      type: 'single-color',
-      isLuckyTile: false,
-      owner: null
-    },{
-      point: '+2',
-      color: ['green'],
-      type: 'single-color',
-      isLuckyTile: false,
-      owner: null
-    },{
-      point: '+1',
-      color: ['fuchsia'],
-      type: 'single-color',
-      isLuckyTile: false,
-      owner: null
-    },{
-      point: '+2',
-      color: ['purple'],
-      type: 'single-color',
-      isLuckyTile: false,
-      owner: null
-    },{
-      point: '+1',
-      color: ['red','blue'],
-      type: 'dual-color',
-      isLuckyTile: false,
-      owner: null
-    }]
-  }
+    row_five: [
+      {
+        point: {
+          display: '+1',
+          operation: '+',
+          score: 1
+        },
+        color: ['red', 'blue', 'green'],
+        type: 'tri-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+    ],
+    row_four: [
+      {
+        point: {
+          display: 'x3',
+          operation: '*',
+          score: 3
+        },
+        color: ['red', 'yellow', 'purple'],
+        type: 'tri-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+      {
+        point: {
+          display: 'x3',
+          operation: '*',
+          score: 3
+        },
+        color: ['green', 'fuchsia', 'blue'],
+        type: 'tri-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+    ],
+    row_three: [
+      {
+        point: {
+          display: 'x2',
+          operation: '*',
+          score: 2
+        },
+        color: ['green', 'purple'],
+        type: 'dual-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+      {
+        point: {
+          display: '+3',
+          operation: '+',
+          score: 3
+        },
+        color: ['blue'],
+        type: 'single-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+      {
+        point: {
+          display: 'x2',
+          operation: '*',
+          score: 2
+        },
+        color: ['red', 'yellow'],
+        type: 'dual-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+    ],
+    row_two: [
+      {
+        point: {
+          display: '-1',
+          operation: '-',
+          score: 1
+        },
+        color: ['blue'],
+        type: 'single-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+      {
+        point: {
+          display: '+3',
+          operation: '+',
+          score: 3
+        },
+        color: ['yellow', 'purple'],
+        type: 'dual-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+      {
+        point: {
+          display: 'x2',
+          operation: '*',
+          score: 2
+        },
+        color: ['red'],
+        type: 'single-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+      {
+        point: {
+          display: '+1',
+          operation: '+',
+          score: 1
+        },
+        color: ['green', 'fuchsia'],
+        type: 'dual-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+    ],
+    row_one: [
+      {
+        point: {
+          display: '+1',
+          operation: '+',
+          score: 1
+        },
+        color: ['yellow'],
+        type: 'single-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+      {
+        point: {
+          display: '+2',
+          operation: '+',
+          score: 2
+        },
+        color: ['green'],
+        type: 'single-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+      {
+        point: {
+          display: '+1',
+          operation: '+',
+          score: 1
+        },
+        color: ['fuchsia'],
+        type: 'single-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+      {
+        point: {
+          display: '+2',
+          operation: '+',
+          score: 2
+        },
+        color: ['purple'],
+        type: 'single-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+      {
+        point: {
+          display: '+1',
+          operation: '+',
+          score: 1
+        },
+        color: ['red', 'blue'],
+        type: 'dual-color',
+        isLuckyTile: false,
+        owner: null,
+      },
+    ],
+  };
 
   public colorTilesArray = Object.values(this.color_tiles);
 
@@ -225,8 +305,8 @@ export class RumbleProperComponent implements OnInit {
   public result_color: string = '';
   public player_tile_assignment: any = {
     tileColor: null,
-    tileOwner: null
-  }
+    tileOwner: null,
+  };
 
   private contextMenuHandler = (event: MouseEvent) => {
     event.preventDefault();
@@ -240,7 +320,7 @@ export class RumbleProperComponent implements OnInit {
     { transform: 'rotateY(180deg)', color: 'blue' }, // back
     { transform: 'rotateY(-90deg)', color: 'green' }, // right
     { transform: 'rotateY(90deg)', color: 'yellow' }, // left
-    { transform: 'rotateX(-90deg)', color: 'pink' }, // top
+    { transform: 'rotateX(-90deg)', color: 'fuchsia' }, // top
     { transform: 'rotateX(90deg)', color: 'purple' }, // bottom
   ];
 
@@ -252,7 +332,7 @@ export class RumbleProperComponent implements OnInit {
       this.rumblerInfo = JSON.parse(rumblerInfo);
     }
 
-    console.log("CTA: ", this.colorTilesArray);
+    console.log('CTA: ', this.colorTilesArray);
   }
 
   questionInitialSetup(key: string) {
@@ -482,11 +562,13 @@ export class RumbleProperComponent implements OnInit {
         } else if (key == 'submit') {
           console.log('Data: ', data);
           const winner = this.rumblerInfo.find((a: any) => a.id == data.id);
-          winner.score++;
-          this.allScoresAreZero = this.checkIfAllScoresAreZero();
-          localStorage.setItem('rumblerInfo', JSON.stringify(this.rumblerInfo));
+          this.player_tile_assignment.tileOwner = winner.name;
+          // winner.score++;
+          // this.allScoresAreZero = this.checkIfAllScoresAreZero();
+          // localStorage.setItem('rumblerInfo', JSON.stringify(this.rumblerInfo));
           this.assignPoint('close');
           this.closeModal('cancel');
+          this.colorDieModal('open');
         } else if (key == 'close') {
           console.log('Closing...');
           addPointModal.style.display = 'none';
@@ -518,7 +600,7 @@ export class RumbleProperComponent implements OnInit {
 
   ngAfterViewInit() {
     this.initialChecks();
-    localStorage.setItem("colorTileData",JSON.stringify(this.color_tiles));
+    localStorage.setItem('colorTileData', JSON.stringify(this.color_tiles));
   }
 
   dissminateQuestions() {
@@ -797,7 +879,7 @@ export class RumbleProperComponent implements OnInit {
       resolve();
     });
   }
-  
+
   rollCube() {
     const intervalTime = 1000;
 
@@ -826,10 +908,126 @@ export class RumbleProperComponent implements OnInit {
       this.cubeStyle = {
         transform: randomFace.transform,
       };
-      this.result_color = randomFace.color;
+      this.player_tile_assignment.tileColor = randomFace.color;
       this.startCountdown = false;
+
+      setTimeout(() => {
+        this.colorDieModal('close');
+        this.colorTilesModal('open');
+        this.assignPlayerNextTile();
+      }, 1500);
     }, stopDelay);
   }
+
+  setPlayerTileOwned(rowNumber: number): string {
+    return `${rowNumber}_${this.player_tile_assignment.tileColor}`;
+  }
+
+  getPlayerCurrentRow(tileOwned: string): number {
+    return parseInt(tileOwned.split('_')[0], 10);
+  }
+
+  assignPlayerNextTile() {
+    const player = this.rumblerInfo.find(
+      (a: any) => a.name == this.player_tile_assignment.tileOwner
+    );
+    if (player['tile_owned']) {
+      const current_row = this.getPlayerCurrentRow(player['tile_owned']);
+      player['tile_owned'] = this.setPlayerTileOwned(current_row + 1);
+      this.updateColorTileOwner(current_row + 1, false);
+    } else {
+      player['tile_owned'] = this.setPlayerTileOwned(1);
+      this.updateColorTileOwner(1, true);
+    }
+  }
+
+  updateColorTileOwner(row_number: number, isFirst: boolean) {
+    let tile_index: string;
+    let prev_index: string | undefined;
+    tile_index =
+      row_number == 1
+        ? 'row_one'
+        : row_number == 2
+        ? 'row_two'
+        : row_number == 3
+        ? 'row_three'
+        : row_number == 4
+        ? 'row_four'
+        : row_number == 5
+        ? 'row_five'
+        : '';
+    prev_index =
+      row_number == 1
+        ? undefined
+        : row_number == 2
+        ? 'row_one'
+        : row_number == 3
+        ? 'row_two'
+        : row_number == 4
+        ? 'row_three'
+        : row_number == 5
+        ? 'row_four'
+        : '';
+
+    console.log('tile_index: ', tile_index);
+    console.log('prev_index: ', prev_index);
+    const tile_group = this.color_tiles[tile_index].find((a: any) =>
+      a.color.includes(this.player_tile_assignment.tileColor)
+    );
+
+    if (!isFirst && prev_index) {
+      const prev_tile_group = this.color_tiles[prev_index].find(
+        (a: any) => a.owner == this.player_tile_assignment.tileOwner
+      );
+
+      prev_tile_group['owner'] = null;
+
+      console.log('Prev tile group: ', prev_tile_group);
+    }
+    console.log('Color Tiles: ', this.color_tiles);
+    tile_group['owner'] = this.player_tile_assignment.tileOwner;
+    this.setPlayerScore(tile_group['point']);
+    localStorage.setItem('colorTileData', JSON.stringify(this.color_tiles));
+  }
+
+  setPlayerScore(tile_point: any) {
+  const player = this.rumblerInfo.find(
+    (a: any) => a.name == this.player_tile_assignment.tileOwner
+  );
+  
+  if (player && player.score != undefined) {
+    const { score } = player;
+    const { operation, score: point } = tile_point;
+
+    console.log("Operation: ", operation);
+    console.log("Point: ", point);
+
+    let total = 0;
+    switch (operation) {
+      case '+':
+        total = score + point;
+        console.log("Adding...");
+        break;
+      case '-':
+        total = score - point;
+        console.log("Subtracting...");
+        break;
+      case '*':
+        total = score * point;
+        console.log("Multiplying...");
+        break;
+      default:
+        console.log("Invalid operation");
+        break;
+    }
+
+    console.log("TOTAL: ", total);
+    player["score"] = total;
+  } else {
+    console.log("Player or score is not available.");
+  }
+}
+
 
   startThreeSecondCountdown(): void {
     if (this.startCountdown) return;
@@ -873,17 +1071,17 @@ export class RumbleProperComponent implements OnInit {
     }
   }
 
-  colorTilesModal(key:string){
+  colorTilesModal(key: string) {
     setTimeout(() => {
       const modal = document.getElementById('colorTilesModal');
-      if(modal){
-        if(key == 'open'){
-           modal.style.display = 'flex';
-            modal.style.backdropFilter = 'brightness(0.1)';
-        }else if(key == 'close'){
+      if (modal) {
+        if (key == 'open') {
+          modal.style.display = 'flex';
+          modal.style.backdropFilter = 'brightness(0.1)';
+        } else if (key == 'close') {
           modal.style.display = 'none';
         }
       }
-    })
+    });
   }
 }

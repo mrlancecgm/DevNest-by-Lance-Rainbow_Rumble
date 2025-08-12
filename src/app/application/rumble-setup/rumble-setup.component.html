@@ -40,7 +40,7 @@
       *ngFor="let r of rumblerInfo"
       id="{{ r.code }}"
       [class.active-box]="r.isActive"
-      (click)="configRumbler($event, r.code)"
+      (click)="configRumbler(r.code)"
     >
       <span style="font-size: x-large"
         ><b>RUMBLER {{ r.id }}</b></span

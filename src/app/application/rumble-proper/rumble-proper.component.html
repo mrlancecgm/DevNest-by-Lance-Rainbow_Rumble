@@ -863,7 +863,7 @@
             x
           </span>
 
-          @for(tile of color_tiles['row_one']; track $index){
+          @for(tile of color_tiles['row_five']; track $index){
           <ng-container
             *ngTemplateOutlet="
               colorTileTemplate;
@@ -872,7 +872,7 @@
           ></ng-container>
           }
           <div style="display: inline-flex">
-            @for(tile of color_tiles['row_two']; track $index){
+            @for(tile of color_tiles['row_four']; track $index){
             <ng-container
               *ngTemplateOutlet="
                 colorTileTemplate;
@@ -894,7 +894,7 @@
           </div>
 
           <div style="display: inline-flex">
-            @for(tile of color_tiles['row_four']; track $index){
+            @for(tile of color_tiles['row_two']; track $index){
             <ng-container
               *ngTemplateOutlet="
                 colorTileTemplate;
@@ -905,7 +905,7 @@
           </div>
 
           <div style="display: inline-flex">
-            @for(tile of color_tiles['row_five']; track $index){
+            @for(tile of color_tiles['row_one']; track $index){
             <ng-container
               *ngTemplateOutlet="
                 colorTileTemplate;
@@ -937,7 +937,7 @@
       margin: '5px'
     }"
   >
-    <h1 style="position: absolute; z-index: 2">{{ tileData["point"] }}</h1>
+    <h1 style="position: absolute; z-index: 2">{{ tileData["point"]["display"] }}</h1>
     <div
       *ngIf="['dual-color', 'tri-color'].includes(tileData['type'])"
       class="d-flex justify-content-center align-items-center"

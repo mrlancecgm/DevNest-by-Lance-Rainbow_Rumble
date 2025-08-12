@@ -209,3 +209,7 @@ export function clearAppData(){
   localStorage.clear();
   sessionStorage.clear();
 }
+
+export function isNullOrEmpty(value: string | null | undefined): boolean {
+  return value === null || value === undefined || value.trim().length === 0;
+}
