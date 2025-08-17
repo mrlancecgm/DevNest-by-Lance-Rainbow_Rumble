@@ -975,6 +975,10 @@ export class RumbleProperComponent implements OnInit {
       a.color.includes(this.player_tile_assignment.tileColor)
     );
 
+    if(!tile_group){
+      return;
+    }
+
     if (!isFirst && prev_index) {
       const prev_tile_group = this.color_tiles[prev_index].find(
         (a: any) => a.owner == this.player_tile_assignment.tileOwner
@@ -988,6 +992,7 @@ export class RumbleProperComponent implements OnInit {
     tile_group['owner'] = this.player_tile_assignment.tileOwner;
     this.setPlayerScore(tile_group['point']);
     localStorage.setItem('colorTileData', JSON.stringify(this.color_tiles));
+    localStorage.setItem('rumblerInfo', JSON.stringify(this.rumblerInfo));
   }
 
   setPlayerScore(tile_point: any) {

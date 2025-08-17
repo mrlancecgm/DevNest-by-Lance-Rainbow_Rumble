@@ -85,6 +85,7 @@ export class RumbleSetupComponent implements OnInit {
         r.isActive = true;
       }
     });
+    this.focusInput();
   }
 
   ngAfterViewInit() {
@@ -103,6 +104,7 @@ export class RumbleSetupComponent implements OnInit {
     let stringInfo = JSON.stringify(this.rumblerInfo);
     localStorage.setItem('rumblerInfo', stringInfo);
     this.getNextRumbler();
+    this.focusInput();
   }
 
   getNextRumbler() {
@@ -128,6 +130,15 @@ export class RumbleSetupComponent implements OnInit {
         }
       }
     }
+  }
+
+  focusInput(){
+    setTimeout(() => {
+      const input = document.getElementById('rumbler-name');
+      if(input){
+        input.focus();
+      }
+    })
   }
 
   ngDoCheck() {
