@@ -1,11 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { RouterTestingHarness } from '@angular/router/testing';
 import { MainMenuComponent } from './main-menu/main-menu.component';
 import { RumbleSetupComponent } from './rumble-setup/rumble-setup.component';
 import { RumbleProperComponent } from './rumble-proper/rumble-proper.component';
-import { ColorDieComponent } from './color-die/color-die.component';
+import { CanDeactivateGuard } from '../core/guards/can-deactivate.guard';
 
 const routes: Routes = [
   {
@@ -14,15 +13,13 @@ const routes: Routes = [
   },
   {
     path: 'rumble-setup',
-    component: RumbleSetupComponent
+    component: RumbleSetupComponent,
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: 'rumble-proper',
-    component: RumbleProperComponent
-  },
-  {
-    path: 'color-die',
-    component: ColorDieComponent
+    component: RumbleProperComponent,
+    canDeactivate: [CanDeactivateGuard]
   }
 ]
 

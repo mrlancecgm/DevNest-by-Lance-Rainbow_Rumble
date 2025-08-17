@@ -11,38 +11,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 15%;
-      flex-direction: column;
-      margin-top: 20px;
-    "
-  >
-    <div
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
-        flex-direction: column;
-      "
-    >
-      <div
-        class="rumbler-box-proper"
-        *ngFor="let r of rumblerInfo"
-        id="{{ r.code }}"
-      >
-        <span style="font-size: large"
-          ><b>{{ r.name }}</b></span
-        >
-        <span style="font-size: x-large">{{ r.score }}</span>
-      </div>
-    </div>
-  </div>
-  <div
-    style="
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 85%;
+      width: 95%;
       flex-direction: column;
       position: relative;
     "
@@ -65,13 +34,12 @@
         margin: 20px 0;
       "
     >
-      &nbsp;
-      <img style="cursor: pointer" [src]="rainbowRumbleLogo" width="20%" />
-
-      <div class="d-flex align-items-center justify-content-center">
-        <div class="logo-wrapper setup-icon" (click)="colorTilesModal('open')">
-          <img src="../../../assets/logo/color_tile_logo.png" width="40" />
+      <div style="align-self: center;" class="logo-wrapper setup-icon" (click)="colorDieModal('open')">
+          <img src="../../../assets/logo/color_die_icon.png" width="40" />
         </div>
+      <img style="align-self: center;" [src]="rainbowRumbleLogo" width="20%" />
+
+      <div style="align-self: center;" class="d-flex align-items-center justify-content-center">
         <img
           (click)="setupRally('open')"
           class="setup-icon"
@@ -182,7 +150,7 @@
             Cancel
           </button>
           <button
-            (click)="assignPoint('open')"
+            (click)="closeModal('done')"
             type="button"
             class="btn btn-success"
             data-bs-dismiss="modal"
@@ -837,133 +805,3 @@
     </div>
   </div>
 </div>
-
-<div class="modal" id="colorTilesModal">
-  <div class="modal-dialog">
-    <div
-      class="modal-content"
-      style="
-        width: 1500px;
-        justify-self: center;
-        height: 800px;
-        background: none;
-        border: none;
-      "
-    >
-      <div class="modal-body">
-        <div
-          class="d-flex justify-content-center align-items-center"
-          style="width: 100%; height: 100%; flex-direction: column"
-        >
-          <span
-            (click)="colorTilesModal('close')"
-            type="button"
-            style="color: #fff; align-self: flex-end"
-          >
-            x
-          </span>
-
-          @for(tile of color_tiles['row_five']; track $index){
-          <ng-container
-            *ngTemplateOutlet="
-              colorTileTemplate;
-              context: { tileData: tile, tileColor: tile['color'] }
-            "
-          ></ng-container>
-          }
-          <div style="display: inline-flex">
-            @for(tile of color_tiles['row_four']; track $index){
-            <ng-container
-              *ngTemplateOutlet="
-                colorTileTemplate;
-                context: { tileData: tile, tileColor: tile['color'] }
-              "
-            ></ng-container>
-            }
-          </div>
-
-          <div style="display: inline-flex">
-            @for(tile of color_tiles['row_three']; track $index){
-            <ng-container
-              *ngTemplateOutlet="
-                colorTileTemplate;
-                context: { tileData: tile, tileColor: tile['color'] }
-              "
-            ></ng-container>
-            }
-          </div>
-
-          <div style="display: inline-flex">
-            @for(tile of color_tiles['row_two']; track $index){
-            <ng-container
-              *ngTemplateOutlet="
-                colorTileTemplate;
-                context: { tileData: tile, tileColor: tile['color'] }
-              "
-            ></ng-container>
-            }
-          </div>
-
-          <div style="display: inline-flex">
-            @for(tile of color_tiles['row_one']; track $index){
-            <ng-container
-              *ngTemplateOutlet="
-                colorTileTemplate;
-                context: { tileData: tile, tileColor: tile['color'] }
-              "
-            ></ng-container>
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<ng-template
-  #colorTileTemplate
-  let-tileData="tileData"
-  let-tileColor="tileColor"
->
-  <div
-    style="position: relative"
-    class="d-flex justify-content-center align-items-center"
-    [ngStyle]="{
-      width: '120px',
-      height: '120px',
-      borderRadius: '20px',
-      boxShadow: 'inset 0px 10px 20px #ccc',
-      background: tileColor[0],
-      margin: '5px'
-    }"
-  >
-    <h1 style="position: absolute; z-index: 2">{{ tileData["point"]["display"] }}</h1>
-    <div
-      *ngIf="['dual-color', 'tri-color'].includes(tileData['type'])"
-      class="d-flex justify-content-center align-items-center"
-      [ngStyle]="{
-        width: '90px',
-        height: '90px',
-        borderRadius: '20px',
-        background: tileColor[1],
-        margin: '5px'
-      }"
-    >
-      <div
-        *ngIf="tileData['type'] == 'tri-color'"
-        class="d-flex justify-content-center align-items-center"
-        [ngStyle]="{
-          width: '60px',
-          height: '60px',
-          borderRadius: '20px',
-          background: tileColor[2],
-          margin: '5px'
-        }"
-      ></div>
-    </div>
-
-    <div class="tile-owner" *ngIf="tileData['owner']">
-      {{ tileData["owner"] }}
-    </div>
-  </div>
-</ng-template>

@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
+  canDeactivate,
   clearAppData,
   isNullOrEmpty,
   uploadRallyQuestions,
@@ -17,6 +18,7 @@ export class RumbleSetupComponent implements OnInit {
   public uploadIcon: string = 'assets/icons/upload_white.png';
 
   public uploadRallyQuestions = uploadRallyQuestions;
+  public canDeactivate = canDeactivate;
 
   public rumblerInfo: any[] = [
     {
@@ -25,7 +27,6 @@ export class RumbleSetupComponent implements OnInit {
       code: 'rumblerOne',
       isActive: false,
       score: 0,
-      tile_owned: null,
     },
     {
       id: 2,
@@ -33,7 +34,6 @@ export class RumbleSetupComponent implements OnInit {
       code: 'rumblerTwo',
       isActive: false,
       score: 0,
-      tile_owned: null,
     },
     {
       id: 3,
@@ -41,7 +41,6 @@ export class RumbleSetupComponent implements OnInit {
       code: 'rumblerThree',
       isActive: false,
       score: 0,
-      tile_owned: null,
     },
     {
       id: 4,
@@ -49,7 +48,6 @@ export class RumbleSetupComponent implements OnInit {
       code: 'rumblerFour',
       isActive: false,
       score: 0,
-      tile_owned: null,
     },
     {
       id: 5,
@@ -57,7 +55,6 @@ export class RumbleSetupComponent implements OnInit {
       code: 'rumblerFive',
       isActive: false,
       score: 0,
-      tile_owned: null,
     },
   ];
 
@@ -68,7 +65,12 @@ export class RumbleSetupComponent implements OnInit {
 
   @ViewChild('rumblerName') rumblerName!: ElementRef;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    window.history.pushState(null, '', window.location.href); 
+    window.onpopstate = () => {
+      window.history.pushState(null, '', window.location.href); 
+    };
+  }
 
   configRumbler(code: string) {
     this.hasActiveBox = true;
@@ -146,5 +148,9 @@ export class RumbleSetupComponent implements OnInit {
       (r: any) => isNullOrEmpty(r.name)
     );
     this.isReadyToRumble = nullName ? false : true;
+  }
+
+  ngOnDestroy(){
+    window.onpopstate = null;
   }
 }

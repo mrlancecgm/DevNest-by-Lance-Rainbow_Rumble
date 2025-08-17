@@ -38,6 +38,13 @@ app-main-menu {
   max-height: calc(var(--screenH));
 }
 
+app-rumble-proper{
+  display: flex;
+  width: 100vw;
+  justify-self: center;
+  align-self: center;
+}
+
 .center-container {
   position: absolute;
   top: 50%;

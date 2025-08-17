@@ -7,15 +7,13 @@ import { FormsModule } from '@angular/forms';
 import { RumbleProperComponent } from './rumble-proper/rumble-proper.component';
 import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RallyQuestionComponent } from './rally-question/rally-question.component';
-import { ColorDieComponent } from './color-die/color-die.component';
 
 @NgModule({
   declarations: [
     MainMenuComponent,
     RumbleSetupComponent,
     RumbleProperComponent,
-    RallyQuestionComponent,
-    ColorDieComponent
+    RallyQuestionComponent
   ],
   imports: [
     CommonModule,

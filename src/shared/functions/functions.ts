@@ -1,6 +1,7 @@
 import * as Papa from 'papaparse';
 
 import * as JSZip from 'jszip';
+import { Observable } from 'rxjs';
 
 export function uploadRallyQuestions(event: any): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -213,3 +214,7 @@ export function clearAppData(){
 export function isNullOrEmpty(value: string | null | undefined): boolean {
   return value === null || value === undefined || value.trim().length === 0;
 }
+
+export function canDeactivate(): Observable<boolean> | boolean {
+    return false;
+  }
