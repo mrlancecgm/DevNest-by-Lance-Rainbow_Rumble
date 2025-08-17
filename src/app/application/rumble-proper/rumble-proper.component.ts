@@ -1,6 +1,7 @@
 import {
   Component,
   ComponentFactoryResolver,
+  HostListener,
   OnInit,
   setTestabilityGetter,
   ViewEncapsulation,
@@ -22,9 +23,9 @@ import { saveAs } from 'file-saver';
 import * as fs from 'fs';
 import { DatePipe } from '@angular/common';
 import { style } from '@angular/animations';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { resolve } from 'path';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-rumble-proper',
@@ -123,12 +124,14 @@ export class RumbleProperComponent implements OnInit {
   public result_color: string = '';
 
   private contextMenuHandler = (event: MouseEvent) => {
+    console.log('Event: ', event);
     event.preventDefault();
     this.stopRolling();
     this.startThreeSecondCountdown();
     console.log('Right-click detected on cube!');
   };
 
+  private allowExit = false;
   faceTransforms = [
     { transform: 'rotateX(0deg) rotateY(0deg)', color: 'red' }, // front
     { transform: 'rotateY(180deg)', color: 'blue' }, // back
@@ -140,10 +143,16 @@ export class RumbleProperComponent implements OnInit {
 
   constructor(private datePipe: DatePipe, private router: Router) {}
 
-  ngOnInit(): void {    
+  canLeaveByBack(): boolean {
+    console.log('Back triggered.');
+    return this.allowExit;
+  }
+
+  ngOnInit(): void {
     window.history.pushState(null, '', window.location.href); 
-    window.onpopstate = () => {
-      window.history.pushState(null, '', window.location.href); 
+    window.onpopstate = (event) => { 
+    console.log("Popping state...", event); 
+    window.history.pushState(null, '', 'http://localhost:4200/application/main-menu');
     };
     const rumblerInfo = localStorage.getItem('rumblerInfo');
     if (rumblerInfo) {
@@ -183,6 +192,7 @@ export class RumbleProperComponent implements OnInit {
         } else if (key == 'close') {
           (modal as HTMLElement).style.display = 'none';
         } else if (key == 'exit') {
+          this.allowExit = true;
           this.router.navigate(['/application/main-menu']);
           clearAppData();
         } else if (key == 'save-and-exit') {
@@ -729,7 +739,6 @@ export class RumbleProperComponent implements OnInit {
     }, stopDelay);
   }
 
-
   startThreeSecondCountdown(): void {
     if (this.startCountdown) return;
 
@@ -762,17 +771,17 @@ export class RumbleProperComponent implements OnInit {
         el.style.display = 'flex';
         el.style.backdropFilter = 'brightness(0.1)';
 
-        modal.addEventListener('contextmenu', this.contextMenuHandler);
+        document.addEventListener('contextmenu', this.contextMenuHandler);
       }, 0);
     } else if (key === 'close') {
       const el = modal as HTMLElement;
       el.style.display = 'none';
 
-      modal.removeEventListener('contextmenu', this.contextMenuHandler);
+      document.removeEventListener('contextmenu', this.contextMenuHandler);
     }
   }
 
-  ngOnDestroy(){
-    window.onpopstate = null;
+  ngOnDestroy() {
+    // if (this.sub) this.sub.unsubscribe();
   }
 }

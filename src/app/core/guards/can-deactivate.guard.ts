@@ -1,18 +1,15 @@
+// back-block.guard.ts
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 import { Observable } from 'rxjs';
 
-export interface CanComponentDeactivate {
-  canDeactivate: () => boolean | Observable<boolean> | Promise<boolean>;
+export interface BackBlockable {
+  canLeaveByBack(): boolean;
 }
 
-@Injectable({
-  providedIn: 'root'
-})
-export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
-  canDeactivate(
-    component: CanComponentDeactivate
-  ): boolean | Observable<boolean> | Promise<boolean> {
-    return component.canDeactivate ? component.canDeactivate() : true;
+@Injectable({ providedIn: 'root' })
+export class BackBlockGuard implements CanDeactivate<BackBlockable> {
+  canDeactivate(component: BackBlockable): Observable<boolean> | boolean {
+    return component.canLeaveByBack();
   }
 }

@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainMenuComponent } from './main-menu/main-menu.component';
 import { RumbleSetupComponent } from './rumble-setup/rumble-setup.component';
 import { RumbleProperComponent } from './rumble-proper/rumble-proper.component';
-import { CanDeactivateGuard } from '../core/guards/can-deactivate.guard';
+import { BackBlockGuard } from '../core/guards/can-deactivate.guard';
 
 const routes: Routes = [
   {
@@ -14,12 +14,12 @@ const routes: Routes = [
   {
     path: 'rumble-setup',
     component: RumbleSetupComponent,
-    canDeactivate: [CanDeactivateGuard]
+    canDeactivate: [BackBlockGuard]
   },
   {
     path: 'rumble-proper',
     component: RumbleProperComponent,
-    canDeactivate: [CanDeactivateGuard]
+    canDeactivate: [BackBlockGuard]
   }
 ]
 
