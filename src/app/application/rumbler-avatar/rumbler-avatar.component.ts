@@ -1,18 +1,14 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import {
-  clearAppData,
-  isNullOrEmpty,
-  uploadRallyQuestions,
-} from '../../../shared/functions/functions';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { clearAppData, isNullOrEmpty, uploadRallyQuestions } from '../../../shared/functions/functions';
 
 @Component({
-  selector: 'app-rumble-setup',
+  selector: 'app-rumbler-avatar',
   standalone: false,
-  templateUrl: './rumble-setup.component.html',
-  styleUrl: './rumble-setup.component.scss',
+  templateUrl: './rumbler-avatar.component.html',
+  styleUrl: './rumbler-avatar.component.scss'
 })
-export class RumbleSetupComponent implements OnInit {
-  public rainbowRumbleLogo: string =
+export class RumblerAvatarComponent {
+public rainbowRumbleLogo: string =
     'assets/logo/rainbow-rumble-transparent.png';
   public uploadIcon: string = 'assets/icons/upload_white.png';
 
@@ -73,7 +69,12 @@ export class RumbleSetupComponent implements OnInit {
 
   @ViewChild('rumblerName') rumblerName!: ElementRef;
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const rumblerInfo = localStorage.getItem("rumblerInfo");
+    if(rumblerInfo){
+      this.rumblerInfo = JSON.parse(rumblerInfo);
+    }
+  }
 
   configRumbler(code: string) {
     this.hasActiveBox = true;
@@ -93,9 +94,9 @@ export class RumbleSetupComponent implements OnInit {
     this.focusInput();
   }
 
-  ngAfterViewInit() {
-    clearAppData();
-  }
+  // ngAfterViewInit() {
+  //   clearAppData();
+  // }
 
   submitName() {
     const name = this.rumblerName.nativeElement.value;

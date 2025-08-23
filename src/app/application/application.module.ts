@@ -8,6 +8,7 @@ import { RumbleProperComponent } from './rumble-proper/rumble-proper.component';
 import { NgbModalModule, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RallyQuestionComponent } from './rally-question/rally-question.component';
 import { ColorDieComponent } from './color-die/color-die.component';
+import { RumblerAvatarComponent } from './rumbler-avatar/rumbler-avatar.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { ColorDieComponent } from './color-die/color-die.component';
     RumbleSetupComponent,
     RumbleProperComponent,
     RallyQuestionComponent,
-    ColorDieComponent
+    ColorDieComponent,
+    RumblerAvatarComponent
   ],
   imports: [
     CommonModule,

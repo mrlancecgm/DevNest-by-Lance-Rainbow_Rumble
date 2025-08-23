@@ -908,7 +908,8 @@ export class RumbleProperComponent implements OnInit {
       this.cubeStyle = {
         transform: randomFace.transform,
       };
-      this.player_tile_assignment.tileColor = randomFace.color;
+      // this.player_tile_assignment.tileColor = randomFace.color;
+      this.player_tile_assignment.tileColor = "red";
       this.startCountdown = false;
 
       setTimeout(() => {
@@ -978,6 +979,14 @@ export class RumbleProperComponent implements OnInit {
     if(!tile_group){
       return;
     }
+
+    console.log("Tile Group: ", {...tile_group});
+    const tileOldOwner = {...tile_group}['owner'];
+    const tileNewOwner = {...this.player_tile_assignment}['tileOwner'];
+
+    
+
+    console.log(`Old:${tileOldOwner} | New:${tileNewOwner}`);
 
     if (!isFirst && prev_index) {
       const prev_tile_group = this.color_tiles[prev_index].find(

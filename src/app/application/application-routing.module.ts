@@ -6,6 +6,7 @@ import { MainMenuComponent } from './main-menu/main-menu.component';
 import { RumbleSetupComponent } from './rumble-setup/rumble-setup.component';
 import { RumbleProperComponent } from './rumble-proper/rumble-proper.component';
 import { ColorDieComponent } from './color-die/color-die.component';
+import { RumblerAvatarComponent } from './rumbler-avatar/rumbler-avatar.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,10 @@ const routes: Routes = [
   {
     path: 'rumble-setup',
     component: RumbleSetupComponent
+  },
+  {
+    path: 'rumbler-avatar',
+    component: RumblerAvatarComponent
   },
   {
     path: 'rumble-proper',

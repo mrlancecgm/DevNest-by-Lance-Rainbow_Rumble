@@ -1,5 +1,5 @@
 <div class="center-container">
-<!-- <div
+  <!-- <div
   style="
     display: flex;
     justify-content: center;
@@ -23,8 +23,9 @@
       routerLink="/application/main-menu"
       [src]="rainbowRumbleLogo"
       width="20%"
-    />    
+    />
   </div>
+
   <div
     style="
       display: flex;
@@ -36,16 +37,32 @@
     "
   >
     <div
-      class="rumbler-box"
+      class="avatar-box"
+      style="position: relative"
       *ngFor="let r of rumblerInfo"
       id="{{ r.code }}"
       [class.active-box]="r.isActive"
       (click)="configRumbler(r.code)"
     >
-      <span style="font-size: x-large"
-        ><b>RUMBLER {{ r.id }}</b></span
+      <div
+        style="
+          display: flex;
+          width: 180px;
+          height: 30px;
+          justify-content: center;
+          align-items: center;
+          background: fuchsia;
+          color: #fff;
+          font-weight: 700;
+          font-size: x-large;
+          border-bottom-left-radius: 10px;
+          border-bottom-right-radius: 10px;
+          position:absolute;
+          bottom: 0px;
+        "
       >
-      <span style="font-size: xx-large">{{ r.name ? r.name : "?" }}</span>
+        {{ r.name }}
+      </div>
     </div>
   </div>
 
@@ -75,7 +92,7 @@
       <input
         #rumblerName
         [(ngModel)]="selectedRumblerName"
-        id="rumbler-name"        
+        id="rumbler-name"
         style="
           width: 100%;
           padding: 20px;
@@ -86,12 +103,7 @@
         "
       />
     </div>
-    <button
-      (click)="submitName()"
-      class="set-name-button"
-    >
-      Set Name
-    </button>
+    <button (click)="submitName()" class="set-name-button">Set Name</button>
   </div>
   <div
     style="
@@ -104,11 +116,11 @@
     "
   >
     <button
-      routerLink="/application/rumbler-avatar"
+      routerLink="/application/rumble-proper"
       *ngIf="isReadyToRumble"
       class="start-rumble-button"
     >
-      NEXT >>
+      START RUMBLING! >>
     </button>
   </div>
 </div>
