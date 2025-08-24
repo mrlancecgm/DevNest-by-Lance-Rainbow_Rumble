@@ -44,6 +44,10 @@
       [class.active-box]="r.isActive"
       (click)="configRumbler(r.code)"
     >
+      <div style="position: absolute; bottom: 30px;" class="d-flex justify-content-center">
+        <img src="../../../assets/avatars/red_man.png" height="145"/>
+      </div>
+      
       <div
         style="
           display: flex;
@@ -51,7 +55,7 @@
           height: 30px;
           justify-content: center;
           align-items: center;
-          background: fuchsia;
+          background: #000;
           color: #fff;
           font-weight: 700;
           font-size: x-large;
@@ -67,7 +71,6 @@
   </div>
 
   <div
-    *ngIf="hasActiveBox"
     style="
       display: flex;
       justify-content: center;
@@ -76,34 +79,28 @@
       flex-direction: column;
     "
   >
-    <h1 style="margin-bottom: 10px; color: white">SET RUMBLER NAME</h1>
+    <h1 style="margin-bottom: 10px; color: white">SELECT YOUR AVATAR</h1>
     <div
       style="
         border: 10px solid white;
         border-radius: 20px;
-        padding: 10px 20px;
-        width: 50%;
-        background-color: yellow;
+        padding: 10px 10px;
+        width: fit-content;
+        background-color: #000;
         color: white;
         display: flex;
         justify-content: center;
       "
     >
-      <input
-        #rumblerName
-        [(ngModel)]="selectedRumblerName"
-        id="rumbler-name"
-        style="
-          width: 100%;
-          padding: 20px;
-          font-size: xx-large;
-          text-align: center;
-          border: none;
-          text-transform: uppercase;
-        "
-      />
+     <div style="display: flex; gap: 10px; flex-wrap: nowrap;">
+      @for(choice of avatarChoices; track choice.id){
+        <div class="avatar-choice">
+          <img [src]="choice.path" height="80">
+        </div>
+      }
+      
+     </div>
     </div>
-    <button (click)="submitName()" class="set-name-button">Set Name</button>
   </div>
   <div
     style="

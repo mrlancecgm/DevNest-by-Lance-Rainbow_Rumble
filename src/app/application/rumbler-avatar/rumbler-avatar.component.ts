@@ -62,6 +62,21 @@ public rainbowRumbleLogo: string =
     },
   ];
 
+  public avatarChoices:any[]=[
+    { id: 1, path: 'assets/avatars/red_man.png' },
+    { id: 2, path: 'assets/avatars/blue_man.png' },
+    { id: 3, path: 'assets/avatars/yellow_man.png' },
+    { id: 4, path: 'assets/avatars/blue_man.png' },
+    { id: 5, path: 'assets/avatars/green_man.png' },
+    { id: 6, path: 'assets/avatars/pink_man.png' },
+    { id: 7, path: 'assets/avatars/red_girl.png' },
+    { id: 8, path: 'assets/avatars/blue_girl.png' },
+    { id: 9, path: 'assets/avatars/yellow_girl.png' },
+    { id: 10, path: 'assets/avatars/blue_girl.png' },
+    { id: 11, path: 'assets/avatars/green_girl.png' },
+    { id: 12, path: 'assets/avatars/pink_girl.png' },
+  ]
+
   public hasActiveBox: boolean = false;
   public selectedRumblerName: string = '';
   public isReadyToRumble: boolean = false;
