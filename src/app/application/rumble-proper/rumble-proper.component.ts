@@ -14,6 +14,7 @@ import {
   arrayToJson,
   convertJsonToCsv,
   clearAppData,
+  isNullOrEmpty,
 } from '../../../shared/functions/functions';
 import * as feather from 'feather-icons';
 import JSZip from 'jszip';
@@ -346,6 +347,14 @@ export class RumbleProperComponent implements OnInit {
     const rumblerInfo = localStorage.getItem('rumblerInfo');
     if (rumblerInfo) {
       this.rumblerInfo = JSON.parse(rumblerInfo);
+      this.rumblerInfo = this.rumblerInfo.map((r: any) => {
+        r.score = typeof r.score === 'string' ? parseInt(r.score, 10) : r.score;
+        r.id = typeof r.id === 'string' ? parseInt(r.id, 10) : r.id;
+        r.isActive = typeof (r.isActive === 'string'
+          ? Boolean(r.isActive)
+          : r.isActive);
+        return r;
+      });
     }
 
     console.log('CTA: ', this.colorTilesArray);
@@ -948,6 +957,10 @@ export class RumbleProperComponent implements OnInit {
     return parseInt(tileOwned.split('_')[0], 10);
   }
 
+  getPlayerCurrentColor(tileOwned: string): string {
+    return tileOwned.split('_')[1];
+  }
+
   assignPlayerNextTile() {
     const player = this.rumblerInfo.find(
       (a: any) => a.name == this.player_tile_assignment.tileOwner
@@ -1005,16 +1018,15 @@ export class RumbleProperComponent implements OnInit {
     const tileNewOwner = { ...this.player_tile_assignment }['tileOwner'];
 
     console.log('Old:', tileOldOwner, 'New: ', tileNewOwner);
-    
 
     const player = this.rumblerInfo.find(
       (a: any) => a.name == this.player_tile_assignment.tileOwner
     );
 
-    console.log("Player: ", player);
+    console.log('Player: ', player);
 
     if (tileOldOwner && tileNewOwner) {
-      console.log('Start tile breaker...', [...this.rumblerInfo]);      
+      console.log('Start tile breaker...', [...this.rumblerInfo]);
       const oldOwner = this.rumblerInfo.find(
         (r: any) => r.name == tileOldOwner
       );
@@ -1168,7 +1180,7 @@ export class RumbleProperComponent implements OnInit {
       const defender = { ...this.tile_breakers }['old']['name'];
       const challenger = { ...this.tile_breakers }['new']['name'];
       console.log(`Defender: ${defender} | Challenger: ${challenger}`);
-      console.log("Rumbler Info: ", [...this.rumblerInfo]);
+      console.log('Rumbler Info: ', [...this.rumblerInfo]);
       keys.forEach((key: string) => {
         if (this.tile_breakers[key]['isWinner']) {
           if (key == 'new') {
@@ -1178,13 +1190,70 @@ export class RumbleProperComponent implements OnInit {
             const loser = this.rumblerInfo.find((r: any) => r.name == defender);
             console.log('Winner: ', winner);
             console.log('Loser: ', loser);
-            const newTileForLoser = {...winner}['tile_owned'];
-            const newTileForWinner = {...loser}['tile_owned'];
-            loser['tile_owned'] = newTileForLoser;
+            const newTileForLoser = { ...winner }['tile_owned'];
+            const newTileForWinner = { ...loser }['tile_owned'];
+            loser['tile_owned'] = isNullOrEmpty(newTileForLoser)
+              ? null
+              : newTileForLoser;
             winner['tile_owned'] = newTileForWinner;
-            this.color_tiles = this.color_tiles.map((tile:any) => {
-              
-            })
+            console.log('New For Winner ', newTileForWinner);
+            console.log('New For Loser ', newTileForLoser);
+            localStorage.setItem("rumblerInfo", JSON.stringify(this.rumblerInfo));
+
+            const assignTileOwner = (
+              tile_row: number,
+              tile_color: string,
+              tile_owner: string
+            ) => {
+              const findAndAssign = (row: string) => {
+                this.color_tiles[row].forEach((tile: any) => {
+                  if (tile['color'].includes(tile_color)) {
+                    tile['owner'] = tile_owner;
+                  }
+                });
+              };
+
+              switch (tile_row) {
+                case 1:
+                  findAndAssign('row_one');
+                  break;
+                case 2:
+                  findAndAssign('row_two');
+                  break;
+                case 3:
+                  findAndAssign('row_three');
+                  break;
+                case 4:
+                  findAndAssign('row_four');
+                  break;
+                case 5:
+                  findAndAssign('row_five');
+                  break;
+              }
+
+              localStorage.setItem("colorTileData", JSON.stringify(this.color_tiles));
+            };
+
+            if (loser['tile_owned']) {
+              const loserTileRow = this.getPlayerCurrentRow(
+                loser['tile_owned']
+              );
+              const loserTileColor = this.getPlayerCurrentColor(
+                loser['tile_owned']
+              );
+              assignTileOwner(loserTileRow, loserTileColor, loser['name']);
+            }
+
+            if (winner['tile_owned']) {
+              const winnerTileRow = this.getPlayerCurrentRow(
+                winner['tile_owned']
+              );
+              const winnerTileColor = this.getPlayerCurrentColor(
+                winner['tile_owned']
+              );
+              assignTileOwner(winnerTileRow, winnerTileColor, winner['name']);
+            }
+
             this.tileBreakerModal('close');
             this.colorTilesModal('open');
           }
