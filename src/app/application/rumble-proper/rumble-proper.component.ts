@@ -45,7 +45,10 @@ export class RumbleProperComponent implements OnInit {
   public convertToCsv = convertToCsv2;
   public csvToJson = csvToJson;
   public convertJsonToCsv = convertJsonToCsv;
-
+  public screen: { width: number; height: number } = {
+    width: 0,
+    height: 0,
+  };
   public interval: any;
   public count: number = 3;
   public startCountdown: boolean = false;
@@ -77,6 +80,19 @@ export class RumbleProperComponent implements OnInit {
   public exitIcon: string = 'assets/icons/exit.png';
   public uploadInProgress: boolean = false;
   public uploadSuccessful: boolean = false;
+
+  public tile_breakers: any = {
+    old: {
+      avatar: null,
+      isWinner: false,
+      name: null,
+    },
+    new: {
+      avatar: null,
+      isWinner: false,
+      name: null,
+    },
+  };
 
   public rumblerInfo: any[] = [
     {
@@ -125,9 +141,9 @@ export class RumbleProperComponent implements OnInit {
     row_five: [
       {
         point: {
-          display: '+1',
+          display: '+8',
           operation: '+',
-          score: 1
+          score: 8,
         },
         color: ['red', 'blue', 'green'],
         type: 'tri-color',
@@ -138,9 +154,9 @@ export class RumbleProperComponent implements OnInit {
     row_four: [
       {
         point: {
-          display: 'x3',
-          operation: '*',
-          score: 3
+          display: '+7',
+          operation: '+',
+          score: 7,
         },
         color: ['red', 'yellow', 'purple'],
         type: 'tri-color',
@@ -149,9 +165,9 @@ export class RumbleProperComponent implements OnInit {
       },
       {
         point: {
-          display: 'x3',
-          operation: '*',
-          score: 3
+          display: '+7',
+          operation: '+',
+          score: 7,
         },
         color: ['green', 'fuchsia', 'blue'],
         type: 'tri-color',
@@ -162,9 +178,9 @@ export class RumbleProperComponent implements OnInit {
     row_three: [
       {
         point: {
-          display: 'x2',
-          operation: '*',
-          score: 2
+          display: '+5',
+          operation: '+',
+          score: 5,
         },
         color: ['green', 'purple'],
         type: 'dual-color',
@@ -173,9 +189,9 @@ export class RumbleProperComponent implements OnInit {
       },
       {
         point: {
-          display: '+3',
+          display: '+6',
           operation: '+',
-          score: 3
+          score: 6,
         },
         color: ['blue'],
         type: 'single-color',
@@ -184,9 +200,9 @@ export class RumbleProperComponent implements OnInit {
       },
       {
         point: {
-          display: 'x2',
-          operation: '*',
-          score: 2
+          display: '+5',
+          operation: '+',
+          score: 5,
         },
         color: ['red', 'yellow'],
         type: 'dual-color',
@@ -197,9 +213,9 @@ export class RumbleProperComponent implements OnInit {
     row_two: [
       {
         point: {
-          display: '-1',
-          operation: '-',
-          score: 1
+          display: '+4',
+          operation: '+',
+          score: 4,
         },
         color: ['blue'],
         type: 'single-color',
@@ -210,7 +226,7 @@ export class RumbleProperComponent implements OnInit {
         point: {
           display: '+3',
           operation: '+',
-          score: 3
+          score: 3,
         },
         color: ['yellow', 'purple'],
         type: 'dual-color',
@@ -219,9 +235,9 @@ export class RumbleProperComponent implements OnInit {
       },
       {
         point: {
-          display: 'x2',
-          operation: '*',
-          score: 2
+          display: '+4',
+          operation: '+',
+          score: 4,
         },
         color: ['red'],
         type: 'single-color',
@@ -230,9 +246,9 @@ export class RumbleProperComponent implements OnInit {
       },
       {
         point: {
-          display: '+1',
+          display: '+3',
           operation: '+',
-          score: 1
+          score: 3,
         },
         color: ['green', 'fuchsia'],
         type: 'dual-color',
@@ -243,9 +259,9 @@ export class RumbleProperComponent implements OnInit {
     row_one: [
       {
         point: {
-          display: '+1',
+          display: '+2',
           operation: '+',
-          score: 1
+          score: 2,
         },
         color: ['yellow'],
         type: 'single-color',
@@ -256,7 +272,7 @@ export class RumbleProperComponent implements OnInit {
         point: {
           display: '+2',
           operation: '+',
-          score: 2
+          score: 2,
         },
         color: ['green'],
         type: 'single-color',
@@ -265,9 +281,9 @@ export class RumbleProperComponent implements OnInit {
       },
       {
         point: {
-          display: '+1',
+          display: '+2',
           operation: '+',
-          score: 1
+          score: 2,
         },
         color: ['fuchsia'],
         type: 'single-color',
@@ -278,7 +294,7 @@ export class RumbleProperComponent implements OnInit {
         point: {
           display: '+2',
           operation: '+',
-          score: 2
+          score: 2,
         },
         color: ['purple'],
         type: 'single-color',
@@ -289,7 +305,7 @@ export class RumbleProperComponent implements OnInit {
         point: {
           display: '+1',
           operation: '+',
-          score: 1
+          score: 1,
         },
         color: ['red', 'blue'],
         type: 'dual-color',
@@ -601,6 +617,10 @@ export class RumbleProperComponent implements OnInit {
   ngAfterViewInit() {
     this.initialChecks();
     localStorage.setItem('colorTileData', JSON.stringify(this.color_tiles));
+    this.screen = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
   }
 
   dissminateQuestions() {
@@ -909,7 +929,7 @@ export class RumbleProperComponent implements OnInit {
         transform: randomFace.transform,
       };
       // this.player_tile_assignment.tileColor = randomFace.color;
-      this.player_tile_assignment.tileColor = "red";
+      this.player_tile_assignment.tileColor = 'red';
       this.startCountdown = false;
 
       setTimeout(() => {
@@ -934,10 +954,10 @@ export class RumbleProperComponent implements OnInit {
     );
     if (player['tile_owned']) {
       const current_row = this.getPlayerCurrentRow(player['tile_owned']);
-      player['tile_owned'] = this.setPlayerTileOwned(current_row + 1);
+      // player['tile_owned'] = this.setPlayerTileOwned(current_row + 1);
       this.updateColorTileOwner(current_row + 1, false);
     } else {
-      player['tile_owned'] = this.setPlayerTileOwned(1);
+      // player['tile_owned'] = this.setPlayerTileOwned(1);
       this.updateColorTileOwner(1, true);
     }
   }
@@ -976,17 +996,45 @@ export class RumbleProperComponent implements OnInit {
       a.color.includes(this.player_tile_assignment.tileColor)
     );
 
-    if(!tile_group){
+    if (!tile_group) {
       return;
     }
 
-    console.log("Tile Group: ", {...tile_group});
-    const tileOldOwner = {...tile_group}['owner'];
-    const tileNewOwner = {...this.player_tile_assignment}['tileOwner'];
+    console.log('Tile Group: ', { ...tile_group });
+    const tileOldOwner = { ...tile_group }['owner'];
+    const tileNewOwner = { ...this.player_tile_assignment }['tileOwner'];
 
+    console.log('Old:', tileOldOwner, 'New: ', tileNewOwner);
     
 
-    console.log(`Old:${tileOldOwner} | New:${tileNewOwner}`);
+    const player = this.rumblerInfo.find(
+      (a: any) => a.name == this.player_tile_assignment.tileOwner
+    );
+
+    console.log("Player: ", player);
+
+    if (tileOldOwner && tileNewOwner) {
+      console.log('Start tile breaker...', [...this.rumblerInfo]);      
+      const oldOwner = this.rumblerInfo.find(
+        (r: any) => r.name == tileOldOwner
+      );
+      const newOwner = this.rumblerInfo.find(
+        (r: any) => r.name == tileNewOwner
+      );
+      this.tile_breakers.old.avatar = oldOwner['avatar'];
+      this.tile_breakers.old.name = oldOwner['name'];
+      this.tile_breakers.new.avatar = newOwner['avatar'];
+      this.tile_breakers.new.name = newOwner['name'];
+
+      console.log('Tile breakers: ', this.tile_breakers);
+      this.tileBreakerModal('open');
+      return;
+    }
+    if (player['tile_owned']) {
+      player['tile_owned'] = this.setPlayerTileOwned(row_number);
+    } else {
+      player['tile_owned'] = this.setPlayerTileOwned(1);
+    }
 
     if (!isFirst && prev_index) {
       const prev_tile_group = this.color_tiles[prev_index].find(
@@ -1005,43 +1053,42 @@ export class RumbleProperComponent implements OnInit {
   }
 
   setPlayerScore(tile_point: any) {
-  const player = this.rumblerInfo.find(
-    (a: any) => a.name == this.player_tile_assignment.tileOwner
-  );
-  
-  if (player && player.score != undefined) {
-    const { score } = player;
-    const { operation, score: point } = tile_point;
+    const player = this.rumblerInfo.find(
+      (a: any) => a.name == this.player_tile_assignment.tileOwner
+    );
 
-    console.log("Operation: ", operation);
-    console.log("Point: ", point);
+    if (player && player.score != undefined) {
+      const { score } = player;
+      const { operation, score: point } = tile_point;
 
-    let total = 0;
-    switch (operation) {
-      case '+':
-        total = score + point;
-        console.log("Adding...");
-        break;
-      case '-':
-        total = score - point;
-        console.log("Subtracting...");
-        break;
-      case '*':
-        total = score * point;
-        console.log("Multiplying...");
-        break;
-      default:
-        console.log("Invalid operation");
-        break;
+      console.log('Operation: ', operation);
+      console.log('Point: ', point);
+
+      let total = 0;
+      switch (operation) {
+        case '+':
+          total = score + point;
+          console.log('Adding...');
+          break;
+        case '-':
+          total = score - point;
+          console.log('Subtracting...');
+          break;
+        case '*':
+          total = score * point;
+          console.log('Multiplying...');
+          break;
+        default:
+          console.log('Invalid operation');
+          break;
+      }
+
+      console.log('TOTAL: ', total);
+      player['score'] = total;
+    } else {
+      console.log('Player or score is not available.');
     }
-
-    console.log("TOTAL: ", total);
-    player["score"] = total;
-  } else {
-    console.log("Player or score is not available.");
   }
-}
-
 
   startThreeSecondCountdown(): void {
     if (this.startCountdown) return;
@@ -1097,5 +1144,58 @@ export class RumbleProperComponent implements OnInit {
         }
       }
     });
+  }
+
+  tileBreakerModal(key: string) {
+    setTimeout(() => {
+      const modal = document.getElementById('tileBreakerModal');
+      if (modal) {
+        feather.replace();
+        if (key == 'open') {
+          modal.style.display = 'flex';
+          modal.style.backdropFilter = 'brightness(0.1)';
+        } else if (key == 'close') {
+          modal.style.display = 'none';
+        } else if (key == 'submit') {
+        }
+      }
+    });
+  }
+
+  setTileBreakerWinner(isSubmit: boolean, winner?: string) {
+    const keys = Object.keys(this.tile_breakers);
+    if (isSubmit) {
+      const defender = { ...this.tile_breakers }['old']['name'];
+      const challenger = { ...this.tile_breakers }['new']['name'];
+      console.log(`Defender: ${defender} | Challenger: ${challenger}`);
+      console.log("Rumbler Info: ", [...this.rumblerInfo]);
+      keys.forEach((key: string) => {
+        if (this.tile_breakers[key]['isWinner']) {
+          if (key == 'new') {
+            const winner = this.rumblerInfo.find(
+              (r: any) => r.name == challenger
+            );
+            const loser = this.rumblerInfo.find((r: any) => r.name == defender);
+            console.log('Winner: ', winner);
+            console.log('Loser: ', loser);
+            const newTileForLoser = {...winner}['tile_owned'];
+            const newTileForWinner = {...loser}['tile_owned'];
+            loser['tile_owned'] = newTileForLoser;
+            winner['tile_owned'] = newTileForWinner;
+            this.color_tiles = this.color_tiles.map((tile:any) => {
+              
+            })
+            this.tileBreakerModal('close');
+            this.colorTilesModal('open');
+          }
+        }
+      });
+    } else {
+      console.log('Keys: ', keys);
+      console.log('Winner: ', winner);
+      keys.forEach((key: string) => {
+        this.tile_breakers[key]['isWinner'] = key == winner ? true : false;
+      });
+    }
   }
 }

@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 150px;
+  width: 200px;
   height: 150px;
   margin: 0px 10px 10px;
   padding: 10px;
@@ -20,6 +20,7 @@
   color: #fff;
   text-align: center;
   cursor: pointer;
+  background: #000;
 }
 
 .rally-board-box {
@@ -299,18 +300,18 @@
   width: 500px;
   height: 500px;
   opacity: 1;
-  border: none; 
+  border: none;
   background: #fff;
-  border-radius: 40px; 
-  box-shadow:inset 0 0 100px #ccc;
+  border-radius: 40px;
+  box-shadow: inset 0 0 100px #ccc;
 }
 
 .front {
-  transform: rotateY(0deg) translateZ(250px); 
+  transform: rotateY(0deg) translateZ(250px);
 }
 
 .front.inner {
-  transform: rotateY(0deg) translateZ(248px); 
+  transform: rotateY(0deg) translateZ(248px);
 }
 
 .back {
@@ -330,38 +331,38 @@
 }
 
 .left {
-  transform: rotateY(-90deg) translateZ(250px); 
+  transform: rotateY(-90deg) translateZ(250px);
 }
 
 .left.inner {
-  transform: rotateY(-90deg) translateZ(248px); 
+  transform: rotateY(-90deg) translateZ(248px);
 }
 
 .top {
-  transform: rotateX(90deg) translateZ(250px); 
+  transform: rotateX(90deg) translateZ(250px);
 }
 
 .top.inner {
-  transform: rotateX(90deg) translateZ(248px); 
+  transform: rotateX(90deg) translateZ(248px);
 }
 
 .bottom {
-  transform: rotateX(-90deg) translateZ(250px); 
+  transform: rotateX(-90deg) translateZ(250px);
 }
 
 .bottom.inner {
-  transform: rotateX(-90deg) translateZ(248px); 
+  transform: rotateX(-90deg) translateZ(248px);
 }
 
 .cover {
-    border-radius: 0;
-    transform: translateZ(0px);
+  border-radius: 0;
+  transform: translateZ(0px);
 }
 .cover.x {
-    transform: rotateY(90deg);
+  transform: rotateY(90deg);
 }
 .cover.z {
-    transform: rotateX(90deg);
+  transform: rotateX(90deg);
 }
 
 .color-die-fill {
@@ -379,9 +380,10 @@
   outline: 10px solid #fff;
 }
 
-.cover, .inner {
+.cover,
+.inner {
   background: #e0e0e0;
-    box-shadow: none;
+  box-shadow: none;
 }
 
 .logo-wrapper {
@@ -389,7 +391,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(circle,rgba(135, 135, 135, 1) 0%, rgba(104, 103, 103, 1) 14%, rgba(69, 67, 67, 1) 37%, rgba(54, 52, 52, 1) 57%, rgba(33, 32, 32, 1) 84%, rgba(0, 0, 0, 1) 100%);
+  background: radial-gradient(
+    circle,
+    rgba(135, 135, 135, 1) 0%,
+    rgba(104, 103, 103, 1) 14%,
+    rgba(69, 67, 67, 1) 37%,
+    rgba(54, 52, 52, 1) 57%,
+    rgba(33, 32, 32, 1) 84%,
+    rgba(0, 0, 0, 1) 100%
+  );
   padding: 10px;
   border: 5px solid #fff;
   border-radius: 50%;
@@ -398,7 +408,7 @@
 
   &::before {
     content: "";
-    position: absolute;    
+    position: absolute;
     top: 0;
     left: -100%;
     width: 60%;
@@ -429,16 +439,92 @@
 }
 
 .tile-owner {
-    border: 2px solid #000;
-    background: #fff;
-    color: #000;
-    position: absolute;
-    z-index: 3;
-    display: flex;
-    align-self: flex-end;
-    width: 85%;
-    text-align: center;
-    justify-content: center;
-    margin: 10px;
-    text-transform: uppercase;
+  border: 2px solid #000;
+  background: #fff;
+  color: #000;
+  position: absolute;
+  z-index: 3;
+  display: flex;
+  align-self: flex-end;
+  width: 85%;
+  text-align: center;
+  justify-content: center;
+  margin: 10px;
+  text-transform: uppercase;
+}
+
+.tile-breaker-box {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 500px;
+  aspect-ratio: 3/4;
+  margin: 20px 10px;
+  padding: 0 20px;
+  border: 10px solid white;
+  border-radius: 50px;
+  flex-direction: column;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  overflow: hidden;
+  z-index: 1;
+  
+  &.winner{
+    box-shadow: 0 0 10px 10px yellow;
+  }
+}
+
+.tile-breaker-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  background: radial-gradient(
+    circle,
+    rgba(223, 0, 0, 1) 2.7%,
+    rgba(214, 91, 0, 1) 15.1%,
+    rgba(233, 245, 0, 1) 29.5%,
+    rgba(23, 255, 17, 1) 45.8%,
+    rgba(29, 255, 255, 1) 61.5%,
+    rgba(5, 17, 255, 1) 76.4%,
+    rgba(202, 0, 253, 1) 92.4%
+  );
+
+  filter: blur(30px);
+  border-radius: 20px;
+}
+
+.tile-breaker {
+  width: 100%;
+  height: 50px;
+  background: #000;
+  color: #fff;
+  font-weight: 700;
+  font-size: xx-large;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  bottom: 0px;
+}
+
+.control-btn {
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  margin-top: 10px;
+  color: #fff;
+  &.assign-btn {
+    background: #4a9900;
+    &:disabled{
+      background: #737373;
+    }
+  }
+  &:hover:not(:disabled) {
+    box-shadow: 0 0 5px 3px yellow;
+    color: yellow;
+  }
 }

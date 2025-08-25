@@ -26,14 +26,19 @@
       "
     >
       <div
-        class="rumbler-box-proper"
+        class="rumbler-box-proper position-relative"
         *ngFor="let r of rumblerInfo"
         id="{{ r.code }}"
       >
-        <span style="font-size: large"
-          ><b>{{ r.name }}</b></span
-        >
-        <span style="font-size: x-large">{{ r.score }}</span>
+        <div class="position-absolute" style="top: 0px">
+          <span style="font-size: xx-large"
+            ><b>{{ r.name }}</b></span
+          >
+        </div>
+        <div class="d-flex position-absolute" style="bottom: 0px; left: 5px">
+          <img [src]="r.avatar" height="90" />
+          <span style="font-size: xxx-large">{{ r.score }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -937,7 +942,9 @@
       margin: '5px'
     }"
   >
-    <h1 style="position: absolute; z-index: 2">{{ tileData["point"]["display"] }}</h1>
+    <h1 style="position: absolute; z-index: 2">
+      {{ tileData["point"]["display"] }}
+    </h1>
     <div
       *ngIf="['dual-color', 'tri-color'].includes(tileData['type'])"
       class="d-flex justify-content-center align-items-center"
@@ -967,3 +974,89 @@
     </div>
   </div>
 </ng-template>
+
+<div class="modal" id="tileBreakerModal">
+  <div class="modal-dialog">
+    <div
+      class="modal-content"
+      style="
+        width: 100%;
+        height: 100%;
+        justify-self: center;
+        width: 1528px;
+        aspect-ratio: 16/9;
+        background: url('../../../assets/images/tile_breaker_bg.jpg');
+        background-position: center;
+        background-size: cover;
+        border: none;
+      "
+    >
+      <div class="modal-body">
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="width: 100%; height: 100%; flex-direction: column"
+        >
+          <div class="d-inline-flex position-relative">
+            <img
+              src="../../../assets/images/tile_breaker_icon.png"
+              width="300"
+              class="position-absolute"
+              style="
+                top: -50px;
+                left: 50%;
+                transform: translateX(-50%);
+                z-index: 2;
+              "
+            />
+            <img
+              src="../../../assets/images/vs.png"
+              width="250"
+              class="position-absolute"
+              style="
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 2;
+              "
+            />
+            <div
+              (click)="setTileBreakerWinner(false,'old')"
+              class="tile-breaker-box position-relative"
+              [class.winner]="tile_breakers['old']?.['isWinner']"
+            >
+              <img [src]="tile_breakers['old']?.['avatar']" height="450" />
+              <div
+                class="tile-breaker d-flex justify-content-center align-items-center position-absolute"
+              >
+                {{ tile_breakers['old']?.['name'] }}
+              </div>
+            </div>
+            <div
+              (click)="setTileBreakerWinner(false,'new')"
+              class="tile-breaker-box position-relative"
+              [class.winner]="tile_breakers['new']?.['isWinner']"
+            >
+              <img [src]="tile_breakers['new']?.['avatar']" height="450" />
+              <div
+                class="tile-breaker d-flex justify-content-center align-items-center position-absolute"
+              >
+                {{ tile_breakers['new']?.['name'] }}
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-center" style="gap: 10px">
+            <button
+              (click)="setTileBreakerWinner(true)"
+              [disabled]="!tile_breakers['old']?.['isWinner'] && !tile_breakers['new']?.['isWinner']"
+              class="control-btn assign-btn"
+            >
+              <span
+                ><i data-feather="check" style="margin-right: 10px"></i>Set as Winner</span
+              >
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

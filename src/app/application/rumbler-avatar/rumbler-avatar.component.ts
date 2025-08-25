@@ -1,14 +1,19 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { clearAppData, isNullOrEmpty, uploadRallyQuestions } from '../../../shared/functions/functions';
+import {
+  clearAppData,
+  isNullOrEmpty,
+  uploadRallyQuestions,
+} from '../../../shared/functions/functions';
+import * as feather from 'feather-icons';
 
 @Component({
   selector: 'app-rumbler-avatar',
   standalone: false,
   templateUrl: './rumbler-avatar.component.html',
-  styleUrl: './rumbler-avatar.component.scss'
+  styleUrl: './rumbler-avatar.component.scss',
 })
 export class RumblerAvatarComponent {
-public rainbowRumbleLogo: string =
+  public rainbowRumbleLogo: string =
     'assets/logo/rainbow-rumble-transparent.png';
   public uploadIcon: string = 'assets/icons/upload_white.png';
 
@@ -22,7 +27,7 @@ public rainbowRumbleLogo: string =
       isActive: false,
       score: 0,
       tile_owned: null,
-      avatar: null
+      avatar: null,
     },
     {
       id: 2,
@@ -31,7 +36,7 @@ public rainbowRumbleLogo: string =
       isActive: false,
       score: 0,
       tile_owned: null,
-      avatar: null
+      avatar: null,
     },
     {
       id: 3,
@@ -40,7 +45,7 @@ public rainbowRumbleLogo: string =
       isActive: false,
       score: 0,
       tile_owned: null,
-      avatar: null
+      avatar: null,
     },
     {
       id: 4,
@@ -49,7 +54,7 @@ public rainbowRumbleLogo: string =
       isActive: false,
       score: 0,
       tile_owned: null,
-      avatar: null
+      avatar: null,
     },
     {
       id: 5,
@@ -58,114 +63,188 @@ public rainbowRumbleLogo: string =
       isActive: false,
       score: 0,
       tile_owned: null,
-      avatar: null
+      avatar: null,
     },
   ];
 
-  public avatarChoices:any[]=[
-    { id: 1, path: 'assets/avatars/red_man.png' },
-    { id: 2, path: 'assets/avatars/blue_man.png' },
-    { id: 3, path: 'assets/avatars/yellow_man.png' },
-    { id: 4, path: 'assets/avatars/blue_man.png' },
-    { id: 5, path: 'assets/avatars/green_man.png' },
-    { id: 6, path: 'assets/avatars/pink_man.png' },
-    { id: 7, path: 'assets/avatars/red_girl.png' },
-    { id: 8, path: 'assets/avatars/blue_girl.png' },
-    { id: 9, path: 'assets/avatars/yellow_girl.png' },
-    { id: 10, path: 'assets/avatars/blue_girl.png' },
-    { id: 11, path: 'assets/avatars/green_girl.png' },
-    { id: 12, path: 'assets/avatars/pink_girl.png' },
-  ]
+  public avatarChoices: any[] = [
+    {
+      id: 1,
+      path: 'assets/avatars/red_man.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 2,
+      path: 'assets/avatars/blue_man.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 3,
+      path: 'assets/avatars/yellow_man.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 4,
+      path: 'assets/avatars/purple_man.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 5,
+      path: 'assets/avatars/green_man.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 6,
+      path: 'assets/avatars/pink_man.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 7,
+      path: 'assets/avatars/red_girl.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 8,
+      path: 'assets/avatars/blue_girl.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 9,
+      path: 'assets/avatars/yellow_girl.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 10,
+      path: 'assets/avatars/purple_girl.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 11,
+      path: 'assets/avatars/green_girl.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+    {
+      id: 12,
+      path: 'assets/avatars/pink_girl.png',
+      isSelected: false,
+      isAssigned: false,
+    },
+  ];
 
   public hasActiveBox: boolean = false;
-  public selectedRumblerName: string = '';
+  public selectedRumbler: any;
   public isReadyToRumble: boolean = false;
   public selectedCode!: string;
+  public selectedAvatar: any;
 
   @ViewChild('rumblerName') rumblerName!: ElementRef;
 
   ngOnInit(): void {
-    const rumblerInfo = localStorage.getItem("rumblerInfo");
-    if(rumblerInfo){
+    const rumblerInfo = localStorage.getItem('rumblerInfo');
+    if (rumblerInfo) {
       this.rumblerInfo = JSON.parse(rumblerInfo);
-    }
-  }
-
-  configRumbler(code: string) {
-    this.hasActiveBox = true;
-    this.selectedCode = code;
-    const activeBox = this.rumblerInfo.find(
-      (r: any) => r.code == this.selectedCode
-    );
-    this.selectedRumblerName = activeBox.name ? activeBox.name : '';
-    console.log('Selected: ', this.selectedCode);
-    this.rumblerInfo.forEach((r: any) => {
-      if (r.code != this.selectedCode) {
+      this.rumblerInfo = this.rumblerInfo.map((r: any) => {
         r.isActive = false;
-      } else {
-        r.isActive = true;
-      }
-    });
-    this.focusInput();
+        return r;
+      });
+      this.saveToLocalStorage();
+    }
   }
 
-  // ngAfterViewInit() {
-  //   clearAppData();
-  // }
-
-  submitName() {
-    const name = this.rumblerName.nativeElement.value;
-    console.log('Name: ', name);
-    if(isNullOrEmpty(name)){
-      return;
+  assignAvatar(avatarPath: string) {
+    const rumbler = this.rumblerInfo.find(
+      (r: any) => r.code == this.selectedRumbler['code']
+    );
+    if (rumbler) {
+      rumbler.avatar = avatarPath;
+      const avatar = this.avatarChoices.find((a: any) => a.path == avatarPath);
+      avatar.isAssigned = true;
     }
-    const activeBox = this.rumblerInfo.find((r: any) => r.isActive == true);
-    console.log('Active Box: ', activeBox);
-    activeBox.name = (name as string).toUpperCase();
-    let stringInfo = JSON.stringify(this.rumblerInfo);
-    localStorage.setItem('rumblerInfo', stringInfo);
+    this.saveToLocalStorage();
     this.getNextRumbler();
-    this.focusInput();
+  }
+
+  removeAvatar(avatarPath: string) {
+    const rumbler = this.rumblerInfo.find(
+      (r: any) => r.code == this.selectedRumbler['code']
+    );
+    if (rumbler) {
+      rumbler.avatar = null;
+      const avatar = this.avatarChoices.find((a: any) => a.path == avatarPath);
+      avatar.isAssigned = false;
+      this.saveToLocalStorage();
+    }
+  }
+
+  selectAvatar(avatarId: number) {
+    console.log('Avatar ID: ', avatarId);
+    this.selectedAvatar = this.avatarChoices.find((s: any) => s.id == avatarId);
+    this.avatarChoices = this.avatarChoices.map((a: any) => {
+      a.isSelected = a.id == avatarId ? true : false;
+      return a;
+    });
+  }
+
+  chooseRumbler(rumblerCode: string) {
+    feather.replace();
+    console.log('Rumbler Code: ', rumblerCode);
+    this.selectedRumbler = this.rumblerInfo.find(
+      (r: any) => r.code == rumblerCode
+    );
+    this.selectedCode = rumblerCode;
+    this.rumblerInfo = this.rumblerInfo.map((r: any) => {
+      r.isActive = r.code == rumblerCode ? true : false;
+      return r;
+    });
+    feather.replace();
   }
 
   getNextRumbler() {
     const rumbler = this.rumblerInfo.find(
       (r: any) => r.code == this.selectedCode
     );
-    console.log("Rumbler: ", rumbler);
+    console.log('Rumbler: ', rumbler);
     if (rumbler) {
       const id = rumbler['id'];
       if (id < 5) {
-        const nextRumbler = this.rumblerInfo.find((r: any) => r.id == id + 1);        
-        console.log("Next rumbler: ", nextRumbler);
+        const nextRumbler = this.rumblerInfo.find((r: any) => r.id == id + 1);
+        console.log('Next rumbler: ', nextRumbler);
         if (nextRumbler) {
-          this.selectedRumblerName = nextRumbler.name;
+          this.selectedRumbler = nextRumbler;
           this.selectedCode = nextRumbler.code;
-          this.rumblerInfo.forEach((r: any) => {
-            if (r.code != nextRumbler.code) {
-              r.isActive = false;
-            } else {
-              r.isActive = true;
-            }
+          this.rumblerInfo = this.rumblerInfo.map((r: any) => {
+            r.isActive = r.code != nextRumbler.code ? false : true;
+            return r;
           });
+          console.log('Rumbler Info: ', this.rumblerInfo);
         }
       }
     }
   }
 
-  focusInput(){
-    setTimeout(() => {
-      const input = document.getElementById('rumbler-name');
-      if(input){
-        input.focus();
-      }
-    })
+  ngAfterViewInit() {
+    feather.replace();
   }
 
   ngDoCheck() {
-    const nullName = this.rumblerInfo.find(
-      (r: any) => isNullOrEmpty(r.name)
+    const nullAvatar = this.rumblerInfo.find((r: any) =>
+      isNullOrEmpty(r.avatar)
     );
-    this.isReadyToRumble = nullName ? false : true;
+    this.isReadyToRumble = nullAvatar ? false : true;
+  }
+
+  saveToLocalStorage() {
+    localStorage.setItem('rumblerInfo', JSON.stringify(this.rumblerInfo));
   }
 }

@@ -20,7 +20,10 @@
 .avatar-box::before {
   content: "";
   position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: -1;
   background: linear-gradient(
     89.7deg,
@@ -32,10 +35,9 @@
     rgba(5, 17, 255, 1) 76.4%,
     rgba(202, 0, 253, 1) 92.4%
   );
-  filter: blur(30px); /* adjust blur amount */
+  filter: blur(30px);
   border-radius: 20px;
 }
-
 
 .rumbler-box:hover {
   transform: scale(1.05);
@@ -58,7 +60,7 @@
   cursor: pointer;
 }
 
-.avatar-choice{
+.avatar-choice {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -73,7 +75,38 @@
   overflow: hidden;
   aspect-ratio: 1/1;
   z-index: 1;
-  &:hover{
-    transform: scale(1.2);
+  &:hover {
+    transform: scale(1.1);
+  }
+  &.selected {
+    transform: scale(1.1);
+    box-shadow: 0 0 5px 3px #fff;
+  }
+  &.assigned {
+    filter: grayscale(1);
+    pointer-events: none;
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.control-btn {
+  padding: 10px;
+  border-radius: 20px;
+  border: none;
+  margin-top: 10px;
+  color: #fff;
+  &.assign-btn {
+    background: #4a9900;
+    &:disabled{
+      background: #737373;
+    }
+  }
+  &.remove-btn {
+    background: red;
+  }
+  &:hover:not(:disabled) {
+    box-shadow: 0 0 5px 3px yellow;
+    color: yellow;
   }
 }

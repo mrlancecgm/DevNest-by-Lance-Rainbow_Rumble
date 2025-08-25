@@ -42,12 +42,19 @@
       *ngFor="let r of rumblerInfo"
       id="{{ r.code }}"
       [class.active-box]="r.isActive"
-      (click)="configRumbler(r.code)"
+      (click)="chooseRumbler(r.code)"
     >
-      <div style="position: absolute; bottom: 30px;" class="d-flex justify-content-center">
-        <img src="../../../assets/avatars/red_man.png" height="145"/>
+      <div
+        style="position: absolute; bottom: 30px"
+        class="d-flex justify-content-center"
+      >
+        <img
+          [src]="r.avatar"
+          onerror="this.src='../../../assets/avatars/default-avatar.png'"
+          height="145"
+        />
       </div>
-      
+
       <div
         style="
           display: flex;
@@ -61,7 +68,7 @@
           font-size: x-large;
           border-bottom-left-radius: 10px;
           border-bottom-right-radius: 10px;
-          position:absolute;
+          position: absolute;
           bottom: 0px;
         "
       >
@@ -92,14 +99,40 @@
         justify-content: center;
       "
     >
-     <div style="display: flex; gap: 10px; flex-wrap: nowrap;">
-      @for(choice of avatarChoices; track choice.id){
-        <div class="avatar-choice">
-          <img [src]="choice.path" height="80">
+      <div style="display: flex; gap: 10px; flex-wrap: nowrap">
+        @for(choice of avatarChoices; track choice.id){
+        <div
+          class="avatar-choice"
+          [class.selected]="choice.isSelected"
+          [class.assigned]="choice.isAssigned"
+          (click)="selectAvatar(choice.id)"
+        >
+          <img [src]="choice.path" height="80" />
         </div>
-      }
-      
-     </div>
+        }
+      </div>
+    </div>
+    <div class="d-flex justify-content-center" style="gap: 10px">
+      <button
+        [disabled]="!selectedAvatar || !selectedRumbler"
+        class="control-btn assign-btn"
+        (click)="assignAvatar(selectedAvatar?.path)"
+      >
+        <span
+          ><i data-feather="check" style="margin-right: 10px"></i>Select
+          Avatar</span
+        >
+      </button>
+      <button
+        [hidden]="selectedRumbler?.['avatar'] == null"
+        class="control-btn remove-btn"
+        (click)="removeAvatar(selectedAvatar?.path)"
+      >
+        <span
+          ><i data-feather="x" style="margin-right: 10px"></i>Remove
+          Avatar</span
+        >
+      </button>
     </div>
   </div>
   <div
