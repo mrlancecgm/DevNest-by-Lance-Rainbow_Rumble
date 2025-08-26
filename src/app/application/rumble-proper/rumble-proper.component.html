@@ -4,6 +4,7 @@
     justify-content: center;
     align-items: center;
     width: 100%;
+    padding:20px;
   "
 >
   <div
@@ -36,7 +37,7 @@
           >
         </div>
         <div class="d-flex position-absolute" style="bottom: 0px; left: 5px">
-          <img [src]="r.avatar" height="90" />
+          <img [src]="r.avatar" class="rumbler-avatar-img" />
           <span style="font-size: xxx-large">{{ r.score }}</span>
         </div>
       </div>
@@ -66,7 +67,7 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        width: 100%;
+        width: 90%;
         margin: 20px 0;
       "
     >
@@ -149,11 +150,10 @@
     </div>
   </div>
 
-  <div class="modal" id="myModal">
+  <div class="modal" id="rallyQuestionModal">
     <div class="modal-dialog">
       <div
-        class="modal-content"
-        style="width: 1000px; justify-self: center; height: 750px"
+        class="modal-content responsive-modal-content"
       >
         <div class="modal-header">
           <h4 class="modal-title">
@@ -256,8 +256,7 @@
 <div class="modal" id="setupModal">
   <div class="modal-dialog">
     <div
-      class="modal-content"
-      style="width: 1000px; justify-self: center; height: 750px"
+      class="modal-content responsive-modal-content"
     >
       <div class="modal-header">
         <h4 class="modal-title">RALLY SETUP</h4>
@@ -302,6 +301,14 @@
             >
               <i data-feather="upload"></i>
               <span style="margin-left: 10px">Save Progress</span>
+            </div>
+            <div
+              class="setup-category"
+              id="reset-btn"
+              (click)="setupRally('reset')"
+            >
+              <i data-feather="rotate-cw"></i>
+              <span style="margin-left: 10px">Reset Game</span>
             </div>
           </div>
           <div
@@ -511,6 +518,27 @@
                 <span>Save Game Data</span>
               </button>
             </div>
+            <div
+              class="category-content"
+              *ngIf="selectedSetupCategory === 'reset'"
+            >
+              <img [ngClass]="{ 'rotating-image': !isDoneReset }" [src]="resetIcon" width="20%" class="mb-2" />
+              <button
+                (click)="confirmGameReset('open')"
+                class="btn btn-primary"
+                style="padding: 10px 20px; width: 40%"
+                [style.background]="isResetSuccessful ? '#1e5019' : '#0d6dfc'"
+              >
+                @if(isDoneReset && !isResetSuccessful){
+                  <span>Reset Game Data</span>
+                }@else if (!isDoneReset && !isResetSuccessful){
+                  <span>Resetting...</span>
+                }@else {
+                  <span>Reset Completed!</span>
+                }
+                
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -583,6 +611,43 @@
       <div class="modal-footer">
         <button
           (click)="controlScore('reset')"
+          type="button"
+          class="btn btn-success"
+          data-bs-dismiss="modal"
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="confirmGameResetModal">
+  <div class="modal-dialog">
+    <div
+      class="modal-content"
+      style="width: fit-content; justify-self: center; height: fit-content"
+    >
+      <div class="modal-header">
+        <h4 class="modal-title">GAME RESET CONFIRMATION</h4>
+        <button
+          (click)="confirmGameReset('close')"
+          type="button"
+          class="btn-close"
+        ></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="d-flex justify-content-between" style="width: 100%">
+          <span
+            >You are about to reset the game to it's original state. Please confirm to proceed.</span
+          >
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          (click)="resetGameData()"
           type="button"
           class="btn btn-success"
           data-bs-dismiss="modal"
@@ -703,14 +768,7 @@
 <div class="modal" id="colorDieModal">
   <div class="modal-dialog">
     <div
-      class="modal-content"
-      style="
-        width: 1500px;
-        justify-self: center;
-        height: 800px;
-        background: none;
-        border: none;
-      "
+      class="modal-content responsive-modal-content transparent"
     >
       <div class="modal-body">
         <div
@@ -846,14 +904,7 @@
 <div class="modal" id="colorTilesModal">
   <div class="modal-dialog">
     <div
-      class="modal-content"
-      style="
-        width: 1500px;
-        justify-self: center;
-        height: 800px;
-        background: none;
-        border: none;
-      "
+      class="modal-content responsive-modal-content transparent"
     >
       <div class="modal-body">
         <div
@@ -978,18 +1029,7 @@
 <div class="modal" id="tileBreakerModal">
   <div class="modal-dialog">
     <div
-      class="modal-content"
-      style="
-        width: 100%;
-        height: 100%;
-        justify-self: center;
-        width: 1528px;
-        aspect-ratio: 16/9;
-        background: url('../../../assets/images/tile_breaker_bg.jpg');
-        background-position: center;
-        background-size: cover;
-        border: none;
-      "
+      class="modal-content tile-breaker-modal-content"
     >
       <div class="modal-body">
         <div

@@ -1,8 +1,7 @@
 import {
   Component,
-  ComponentFactoryResolver,
+  ChangeDetectorRef,
   OnInit,
-  setTestabilityGetter,
   ViewEncapsulation,
 } from '@angular/core';
 
@@ -24,6 +23,7 @@ import { DatePipe } from '@angular/common';
 import { style } from '@angular/animations';
 import { Router } from '@angular/router';
 import { resolve } from 'path';
+import { distinctUntilChanged, fromEvent, map, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-rumble-proper',
@@ -72,15 +72,20 @@ export class RumbleProperComponent implements OnInit {
   };
 
   public allScoresAreZero: boolean = false;
+  public isDoneReset: boolean = true;
+  public isResetSuccessful: boolean = false;
 
   public rainbowRumbleLogo: string =
     'assets/logo/rainbow-rumble-transparent.png';
   public setupIcon: string = 'assets/icons/setup-icon.png';
   public fileBrowseIcon: string = 'assets/icons/file-browse.png';
   public saveIcon: string = 'assets/icons/save.png';
+  public resetIcon: string = 'assets/icons/reset.png';
   public exitIcon: string = 'assets/icons/exit.png';
   public uploadInProgress: boolean = false;
   public uploadSuccessful: boolean = false;
+
+  private resizeSubscription!: Subscription;
 
   public tile_breakers: any = {
     old: {
@@ -341,10 +346,22 @@ export class RumbleProperComponent implements OnInit {
     { transform: 'rotateX(90deg)', color: 'purple' }, // bottom
   ];
 
-  constructor(private datePipe: DatePipe, private router: Router) {}
+  constructor(
+    private datePipe: DatePipe,
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    const rumblerInfo = localStorage.getItem('rumblerInfo');
+    this.configRumblerInfo(false);
+    this.restoreColorTileData(false);
+    console.log('CTA: ', this.colorTilesArray);
+  }
+
+  configRumblerInfo(isRaw: boolean) {
+    const rumblerInfo = isRaw
+      ? localStorage.getItem('rawRumblerInfo')
+      : localStorage.getItem('rumblerInfo');
     if (rumblerInfo) {
       this.rumblerInfo = JSON.parse(rumblerInfo);
       this.rumblerInfo = this.rumblerInfo.map((r: any) => {
@@ -355,9 +372,64 @@ export class RumbleProperComponent implements OnInit {
           : r.isActive);
         return r;
       });
+      localStorage.setItem("rumblerInfo",JSON.stringify(this.rumblerInfo));
     }
+  }
 
-    console.log('CTA: ', this.colorTilesArray);
+  restoreColorTileData(isRaw: boolean) {
+    const colorTileData = isRaw
+      ? localStorage.getItem('rawColorTileData')
+      : localStorage.getItem('colorTileData');
+    if (colorTileData) {
+      this.color_tiles = JSON.parse(colorTileData);
+      localStorage.setItem('colorTileData', JSON.stringify(this.color_tiles));
+    }
+  }
+
+  makeCopyOfRawData() {
+    localStorage.setItem('rawRumblerInfo', JSON.stringify(this.rumblerInfo));
+    this.saveEditedRallyQuestions(true);
+    localStorage.setItem('rawColorTileData', JSON.stringify(this.color_tiles));
+  }
+
+  resetGameData() {    
+    this.isDoneReset = false;
+    const rumblerInfo = localStorage.getItem('rawRumblerInfo');
+    const colorTileData = localStorage.getItem('rawColorTileData');
+    const rallyQuestions = localStorage.getItem('rawRallyQuestions');
+    console.log("RI: ", rumblerInfo);
+    console.log("CTD: ", colorTileData);
+    console.log("RQ: ", rallyQuestions);
+    if (rumblerInfo && colorTileData && rallyQuestions) {
+      this.configRumblerInfo(true);
+      this.restoreColorTileData(true);
+      this.emptyRallyQuestions();
+      this.configRallyQuestions(true);
+      this.confirmGameReset('close');
+      console.log("Color TIles: ", this.color_tiles);
+
+      setTimeout(() => {
+        this.isDoneReset = true;
+        this.isResetSuccessful = true;
+        setTimeout(() => {
+          this.isResetSuccessful = false;
+        }, 1500)
+      },3000)
+    }
+  }
+
+  confirmGameReset(key: string) {
+    setTimeout(() => {
+      const modal = document.getElementById('confirmGameResetModal');
+      if (modal) {
+        if (key == 'open') {
+          (modal as HTMLElement).style.display = 'flex';
+          (modal as HTMLElement).style.backdropFilter = 'brightness(0.5)';
+        } else if (key == 'close') {
+          (modal as HTMLElement).style.display = 'none';
+        }
+      }
+    });
   }
 
   questionInitialSetup(key: string) {
@@ -431,6 +503,14 @@ export class RumbleProperComponent implements OnInit {
     console.log('Q21to30: ', this.questions21_to_30);
     console.log('Q31to40: ', this.questions31_to_40);
     console.log('Q41to50: ', this.questions41_to_50);
+  }
+
+  emptyRallyQuestions(){
+    this.questions1_to_10 = [];
+    this.questions11_to_20 = [];
+    this.questions21_to_30 = [];
+    this.questions31_to_40 = [];
+    this.questions41_to_50 = [];
   }
 
   generateQuestions(isInitialSetup?: boolean) {
@@ -508,7 +588,7 @@ export class RumbleProperComponent implements OnInit {
       this.animateCard = false;
 
       setTimeout(() => {
-        const modal = document.getElementById('myModal');
+        const modal = document.getElementById('rallyQuestionModal');
         console.log('Modal: ', modal);
         if (modal) {
           modal.style.display = 'flex';
@@ -521,7 +601,7 @@ export class RumbleProperComponent implements OnInit {
 
   closeModal(key?: string) {
     setTimeout(() => {
-      const modal = document.getElementById('myModal');
+      const modal = document.getElementById('rallyQuestionModal');
       console.log('Modal: ', modal);
       if (modal) {
         if (key == 'cancel') {
@@ -602,9 +682,11 @@ export class RumbleProperComponent implements OnInit {
     });
   }
 
-  initialChecks() {
+  configRallyQuestions(isRaw: boolean) {
     const loadExisting = sessionStorage.getItem('loadExisting');
-    const rallyQuestions = localStorage.getItem('rallyQuestions');
+    const rallyQuestions = isRaw
+      ? localStorage.getItem('rawRallyQuestions')
+      : localStorage.getItem('rallyQuestions');
     console.log('loadExisting', loadExisting);
     if (!loadExisting) {
       if (rallyQuestions) {
@@ -620,16 +702,21 @@ export class RumbleProperComponent implements OnInit {
       }
     }
 
+    this.saveEditedRallyQuestions(false);
+
     feather.replace();
   }
 
   ngAfterViewInit() {
-    this.initialChecks();
+    this.configRallyQuestions(false);
     localStorage.setItem('colorTileData', JSON.stringify(this.color_tiles));
     this.screen = {
       width: window.innerWidth,
       height: window.innerHeight,
     };
+
+    this.makeCopyOfRawData();
+    this.setStyleProperties();
   }
 
   dissminateQuestions() {
@@ -696,7 +783,7 @@ export class RumbleProperComponent implements OnInit {
         this.uploadSuccessful = true;
         this.uploadLabel = 'Uploaded!';
         if (isInitialSetup) {
-          this.initialChecks();
+          this.configRallyQuestions(false);
           this.questionInitialSetup('close');
         }
 
@@ -712,12 +799,14 @@ export class RumbleProperComponent implements OnInit {
     selectedEl: HTMLElement,
     notSelectedEl1: HTMLElement,
     notSelectedEl2: HTMLElement,
-    notSelectedEl3: HTMLElement
+    notSelectedEl3: HTMLElement,
+    notSelectedEl4: HTMLElement
   ) {
     selectedEl.classList.add('active');
     notSelectedEl1.classList.remove('active');
     notSelectedEl2.classList.remove('active');
     notSelectedEl3.classList.remove('active');
+    notSelectedEl4.classList.remove('active');
   }
 
   setupRally(key: string) {
@@ -728,7 +817,8 @@ export class RumbleProperComponent implements OnInit {
       const modifyBtn = document.getElementById('modify-btn');
       const scoringBtn = document.getElementById('scoring-btn');
       const saveBtn = document.getElementById('save-btn');
-      const allBtnPresent = uploadBtn && modifyBtn && scoringBtn && saveBtn;
+      const resetBtn = document.getElementById('reset-btn');
+      const allBtnPresent = uploadBtn && modifyBtn && scoringBtn && saveBtn && resetBtn;
       if (setupModal) {
         if (key == 'open') {
           this.selectedSetupCategory = 'upload';
@@ -737,33 +827,40 @@ export class RumbleProperComponent implements OnInit {
           feather.replace();
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn, saveBtn);
+            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn, saveBtn, resetBtn);
           }
         } else if (key == 'upload') {
           this.selectedSetupCategory = key;
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn, saveBtn);
+            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn, saveBtn, resetBtn);
           }
         } else if (key == 'modify') {
           this.selectedSetupCategory = key;
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(modifyBtn, scoringBtn, uploadBtn, saveBtn);
+            this.setButtonTheme(modifyBtn, scoringBtn, uploadBtn, saveBtn, resetBtn);
           }
         } else if (key == 'scoring') {
           this.selectedSetupCategory = key;
           this.allScoresAreZero = this.checkIfAllScoresAreZero();
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(scoringBtn, uploadBtn, modifyBtn, saveBtn);
+            this.setButtonTheme(scoringBtn, uploadBtn, modifyBtn, saveBtn, resetBtn);
           }
         } else if (key == 'save') {
           this.selectedSetupCategory = key;
           this.allScoresAreZero = this.checkIfAllScoresAreZero();
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(saveBtn, scoringBtn, uploadBtn, modifyBtn);
+            this.setButtonTheme(saveBtn, scoringBtn, uploadBtn, modifyBtn, resetBtn);
+          }
+        } else if (key == 'reset') {
+          this.selectedSetupCategory = key;
+          this.allScoresAreZero = this.checkIfAllScoresAreZero();
+          if (allBtnPresent) {
+            feather.replace();
+            this.setButtonTheme(resetBtn, scoringBtn, uploadBtn, modifyBtn, saveBtn);
           }
         } else if (key == 'close') {
           setupModal.style.display = 'none';
@@ -868,7 +965,7 @@ export class RumbleProperComponent implements OnInit {
     });
   }
 
-  saveEditedRallyQuestions() {
+  saveEditedRallyQuestions(isRaw?: boolean) {
     const mergedArray = [
       ...this.questions1_to_10,
       ...this.questions11_to_20,
@@ -877,8 +974,12 @@ export class RumbleProperComponent implements OnInit {
       ...this.questions41_to_50,
     ];
     console.log('mergedArray', mergedArray);
-    localStorage.setItem('rallyQuestions', JSON.stringify(mergedArray));
-    this.editQuestion('close');
+    if (!isRaw) {
+      localStorage.setItem('rallyQuestions', JSON.stringify(mergedArray));
+      this.editQuestion('close');
+    } else {
+      localStorage.setItem('rawRallyQuestions', JSON.stringify(mergedArray));
+    }
   }
 
   saveGameData(): Promise<void> {
@@ -1295,5 +1396,63 @@ export class RumbleProperComponent implements OnInit {
         this.tile_breakers[key]['isWinner'] = key == winner ? true : false;
       });
     }
+  }
+
+  roundToBasePlace(value: number): number {
+    const absValue = Math.abs(value);
+
+    if (absValue >= 100) {
+      return Math.floor(value / 100) * 100;
+    } else {
+      return Math.floor(value / 10) * 10;
+    }
+  }
+
+  ngAfterContentChecked() {
+    console.log('Screen: ', this.screen);
+    if (!this.resizeSubscription) {
+      this.resizeSubscription = fromEvent(window, 'resize')
+        .pipe(
+          map(() => ({ width: window.innerWidth, height: window.innerHeight })),
+          distinctUntilChanged(
+            (prev, curr) =>
+              prev.width === curr.width && prev.height === curr.height
+          )
+        )
+        .subscribe(() => this.onResize());
+    }
+  }
+  onResize() {
+    this.screen = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+    this.setStyleProperties();
+    this.changeDetectorRef.detectChanges();
+  }
+
+  setStyleProperties() {
+    setTimeout(() => {
+      const rumblerBox = document.querySelector('.rumbler-box-proper');
+      if (rumblerBox) {
+        const rumblerBoxH = rumblerBox.getBoundingClientRect().height;
+        document.documentElement.style.setProperty(
+          '--rumblerAvatar',
+          `${rumblerBoxH}*${0.55}px`
+        );
+      }
+      document.documentElement.style.setProperty(
+        '--fullModalW',
+        `${this.roundToBasePlace(this.screen.width)}px`
+      );
+      document.documentElement.style.setProperty(
+        '--fullModalH',
+        `${this.roundToBasePlace(this.screen.height)}px`
+      );
+      document.documentElement.style.setProperty(
+        '--screenW',
+        `${this.screen.width}px`
+      );
+    });
   }
 }

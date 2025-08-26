@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 200px;
-  height: 150px;
+  width: 90%;
+  aspect-ratio: 4/3;
   margin: 0px 10px 10px;
   padding: 10px;
   border: 10px solid white;
@@ -23,13 +23,17 @@
   background: #000;
 }
 
+.rumbler-avatar-img {
+  height: calc(var(--rumblerAvatar));
+}
+
 .rally-board-box {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100px;
-  height: 100px;
-  margin: 0px 10px 10px;
+  aspect-ratio: 1/1;
+  margin-bottom: 10px;
   padding: 10px;
   border: 10px solid white;
   border-radius: 20px;
@@ -57,12 +61,34 @@
   justify-content: center;
   align-items: center;
   width: 90%;
-  margin-bottom: 10px;
+  gap: 10px;
 }
 
 .done-box {
   pointer-events: none;
   background: transparent;
+}
+
+.tile-breaker-modal-content {
+  width: 100%;
+  height: 100%;
+  justify-self: center;
+  width: calc(var(--screenW));
+  aspect-ratio: 16/9;
+  background: url("../../../assets/images/tile_breaker_bg.jpg");
+  background-position: center;
+  background-size: cover;
+  border: none;
+}
+
+.responsive-modal-content {
+  width: calc(var(--fullModalW));
+  justify-self: center;
+  height: calc(var(--fullModalH));
+  &.transparent {
+    background: none;
+    border: none;
+  }
 }
 
 .picked-card-backdrop {
@@ -470,10 +496,23 @@
   cursor: pointer;
   overflow: hidden;
   z-index: 1;
-  
-  &.winner{
+
+  &.winner {
     box-shadow: 0 0 10px 10px yellow;
   }
+}
+
+@keyframes rotateClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.rotating-image {
+  animation: rotateClockwise 2s linear infinite;
 }
 
 .tile-breaker-box::before {
@@ -519,7 +558,7 @@
   color: #fff;
   &.assign-btn {
     background: #4a9900;
-    &:disabled{
+    &:disabled {
       background: #737373;
     }
   }

@@ -2,7 +2,15 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
+  width: 100%;
   overflow: hidden;
+}
+
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .animated-bg {
@@ -51,8 +59,8 @@ app-main-menu {
   flex-direction: column;
 }
 
-body {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-}
+// body {
+//   height: 100vh;
+//   display: flex;
+//   align-items: center;
+// }
