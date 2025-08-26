@@ -1178,6 +1178,7 @@ export class RumbleProperComponent implements OnInit {
     const keys = Object.keys(this.tile_breakers);
     if (isSubmit) {
       const defender = { ...this.tile_breakers }['old']['name'];
+
       const challenger = { ...this.tile_breakers }['new']['name'];
       console.log(`Defender: ${defender} | Challenger: ${challenger}`);
       console.log('Rumbler Info: ', [...this.rumblerInfo]);
@@ -1198,17 +1199,27 @@ export class RumbleProperComponent implements OnInit {
             winner['tile_owned'] = newTileForWinner;
             console.log('New For Winner ', newTileForWinner);
             console.log('New For Loser ', newTileForLoser);
-            localStorage.setItem("rumblerInfo", JSON.stringify(this.rumblerInfo));
+            localStorage.setItem(
+              'rumblerInfo',
+              JSON.stringify(this.rumblerInfo)
+            );
 
+            let scoreAdjustment!: number;
             const assignTileOwner = (
               tile_row: number,
               tile_color: string,
-              tile_owner: string
+              tile_owner: string,
+              isWinner: boolean
             ) => {
               const findAndAssign = (row: string) => {
                 this.color_tiles[row].forEach((tile: any) => {
                   if (tile['color'].includes(tile_color)) {
+                    console.log('Is Winner: ', isWinner);
+                    console.log('Tile: ', tile);
                     tile['owner'] = tile_owner;
+                    if (isWinner) {
+                      scoreAdjustment = tile['point']['score'];
+                    }
                   }
                 });
               };
@@ -1231,7 +1242,10 @@ export class RumbleProperComponent implements OnInit {
                   break;
               }
 
-              localStorage.setItem("colorTileData", JSON.stringify(this.color_tiles));
+              localStorage.setItem(
+                'colorTileData',
+                JSON.stringify(this.color_tiles)
+              );
             };
 
             if (loser['tile_owned']) {
@@ -1241,7 +1255,12 @@ export class RumbleProperComponent implements OnInit {
               const loserTileColor = this.getPlayerCurrentColor(
                 loser['tile_owned']
               );
-              assignTileOwner(loserTileRow, loserTileColor, loser['name']);
+              assignTileOwner(
+                loserTileRow,
+                loserTileColor,
+                loser['name'],
+                false
+              );
             }
 
             if (winner['tile_owned']) {
@@ -1251,12 +1270,22 @@ export class RumbleProperComponent implements OnInit {
               const winnerTileColor = this.getPlayerCurrentColor(
                 winner['tile_owned']
               );
-              assignTileOwner(winnerTileRow, winnerTileColor, winner['name']);
+              assignTileOwner(
+                winnerTileRow,
+                winnerTileColor,
+                winner['name'],
+                true
+              );
             }
+            winner['score'] = winner['score'] + scoreAdjustment;
+            loser['score'] = loser['score'] - scoreAdjustment;
 
             this.tileBreakerModal('close');
             this.colorTilesModal('open');
           }
+        } else {
+          this.tileBreakerModal('close');
+          this.colorTilesModal('open');
         }
       });
     } else {
