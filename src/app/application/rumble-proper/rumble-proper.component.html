@@ -1100,3 +1100,35 @@
     </div>
   </div>
 </div>
+
+<div class="modal" id="tileBreakerNotificationModal">
+  <div class="modal-dialog">
+    <div
+      class="modal-content"
+      style="width: fit-content; justify-self: center; height: fit-content"
+    >
+      <div class="modal-header">
+        <h4 class="modal-title">TILE BREAKER RESULT</h4>
+      </div>
+
+      <div class="modal-body">
+        <div class="d-flex justify-content-between" style="width: 100%">
+          <span
+            >{{ tileBreakerNotificationMessage }}</span
+          >
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button
+          (click)="tileBreakerNotification('close')"
+          type="button"
+          class="btn btn-success"
+          data-bs-dismiss="modal"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

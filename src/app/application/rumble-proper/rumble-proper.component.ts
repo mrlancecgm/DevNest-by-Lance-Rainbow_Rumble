@@ -24,6 +24,7 @@ import { style } from '@angular/animations';
 import { Router } from '@angular/router';
 import { resolve } from 'path';
 import { distinctUntilChanged, fromEvent, map, Subscription } from 'rxjs';
+import { DefendedTileRecord } from '../../../shared/interfaces/defendedTileRecord';
 
 @Component({
   selector: 'app-rumble-proper',
@@ -38,6 +39,7 @@ export class RumbleProperComponent implements OnInit {
   public questions21_to_30: any[] = [];
   public questions31_to_40: any[] = [];
   public questions41_to_50: any[] = [];
+  public defended_tile_history: DefendedTileRecord[] = [];
   public hasCardPicked: boolean = false;
   public animateCard: boolean = false;
   public uploadLabel: string = 'Browse File';
@@ -84,6 +86,8 @@ export class RumbleProperComponent implements OnInit {
   public exitIcon: string = 'assets/icons/exit.png';
   public uploadInProgress: boolean = false;
   public uploadSuccessful: boolean = false;
+
+  public tileBreakerNotificationMessage!: string;
 
   private resizeSubscription!: Subscription;
 
@@ -328,6 +332,7 @@ export class RumbleProperComponent implements OnInit {
   public player_tile_assignment: any = {
     tileColor: null,
     tileOwner: null,
+    tileRowNumber: null,
   };
 
   private contextMenuHandler = (event: MouseEvent) => {
@@ -355,7 +360,21 @@ export class RumbleProperComponent implements OnInit {
   ngOnInit(): void {
     this.configRumblerInfo(false);
     this.restoreColorTileData(false);
+    this.restoreDefendedTileHistory(false);
     console.log('CTA: ', this.colorTilesArray);
+  }
+
+  restoreDefendedTileHistory(isRaw: boolean) {
+    const tileHistory = isRaw
+      ? localStorage.getItem('rawDefendedTileHistory')
+      : localStorage.getItem('defendedTileHistory');
+    if (tileHistory) {
+      this.defended_tile_history = JSON.parse(tileHistory);
+      localStorage.setItem(
+        'defendedTileHistory',
+        JSON.stringify(this.defended_tile_history)
+      );
+    }
   }
 
   configRumblerInfo(isRaw: boolean) {
@@ -372,7 +391,7 @@ export class RumbleProperComponent implements OnInit {
           : r.isActive);
         return r;
       });
-      localStorage.setItem("rumblerInfo",JSON.stringify(this.rumblerInfo));
+      localStorage.setItem('rumblerInfo', JSON.stringify(this.rumblerInfo));
     }
   }
 
@@ -390,31 +409,35 @@ export class RumbleProperComponent implements OnInit {
     localStorage.setItem('rawRumblerInfo', JSON.stringify(this.rumblerInfo));
     this.saveEditedRallyQuestions(true);
     localStorage.setItem('rawColorTileData', JSON.stringify(this.color_tiles));
+    localStorage.setItem(
+      'rawDefendedTileHistory',
+      JSON.stringify(this.defended_tile_history)
+    );
   }
 
-  resetGameData() {    
+  resetGameData() {
     this.isDoneReset = false;
     const rumblerInfo = localStorage.getItem('rawRumblerInfo');
     const colorTileData = localStorage.getItem('rawColorTileData');
     const rallyQuestions = localStorage.getItem('rawRallyQuestions');
-    console.log("RI: ", rumblerInfo);
-    console.log("CTD: ", colorTileData);
-    console.log("RQ: ", rallyQuestions);
+    console.log('RI: ', rumblerInfo);
+    console.log('CTD: ', colorTileData);
+    console.log('RQ: ', rallyQuestions);
     if (rumblerInfo && colorTileData && rallyQuestions) {
       this.configRumblerInfo(true);
       this.restoreColorTileData(true);
       this.emptyRallyQuestions();
       this.configRallyQuestions(true);
       this.confirmGameReset('close');
-      console.log("Color TIles: ", this.color_tiles);
+      console.log('Color TIles: ', this.color_tiles);
 
       setTimeout(() => {
         this.isDoneReset = true;
         this.isResetSuccessful = true;
         setTimeout(() => {
           this.isResetSuccessful = false;
-        }, 1500)
-      },3000)
+        }, 1500);
+      }, 3000);
     }
   }
 
@@ -505,7 +528,7 @@ export class RumbleProperComponent implements OnInit {
     console.log('Q41to50: ', this.questions41_to_50);
   }
 
-  emptyRallyQuestions(){
+  emptyRallyQuestions() {
     this.questions1_to_10 = [];
     this.questions11_to_20 = [];
     this.questions21_to_30 = [];
@@ -818,7 +841,8 @@ export class RumbleProperComponent implements OnInit {
       const scoringBtn = document.getElementById('scoring-btn');
       const saveBtn = document.getElementById('save-btn');
       const resetBtn = document.getElementById('reset-btn');
-      const allBtnPresent = uploadBtn && modifyBtn && scoringBtn && saveBtn && resetBtn;
+      const allBtnPresent =
+        uploadBtn && modifyBtn && scoringBtn && saveBtn && resetBtn;
       if (setupModal) {
         if (key == 'open') {
           this.selectedSetupCategory = 'upload';
@@ -827,40 +851,76 @@ export class RumbleProperComponent implements OnInit {
           feather.replace();
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn, saveBtn, resetBtn);
+            this.setButtonTheme(
+              uploadBtn,
+              modifyBtn,
+              scoringBtn,
+              saveBtn,
+              resetBtn
+            );
           }
         } else if (key == 'upload') {
           this.selectedSetupCategory = key;
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(uploadBtn, modifyBtn, scoringBtn, saveBtn, resetBtn);
+            this.setButtonTheme(
+              uploadBtn,
+              modifyBtn,
+              scoringBtn,
+              saveBtn,
+              resetBtn
+            );
           }
         } else if (key == 'modify') {
           this.selectedSetupCategory = key;
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(modifyBtn, scoringBtn, uploadBtn, saveBtn, resetBtn);
+            this.setButtonTheme(
+              modifyBtn,
+              scoringBtn,
+              uploadBtn,
+              saveBtn,
+              resetBtn
+            );
           }
         } else if (key == 'scoring') {
           this.selectedSetupCategory = key;
           this.allScoresAreZero = this.checkIfAllScoresAreZero();
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(scoringBtn, uploadBtn, modifyBtn, saveBtn, resetBtn);
+            this.setButtonTheme(
+              scoringBtn,
+              uploadBtn,
+              modifyBtn,
+              saveBtn,
+              resetBtn
+            );
           }
         } else if (key == 'save') {
           this.selectedSetupCategory = key;
           this.allScoresAreZero = this.checkIfAllScoresAreZero();
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(saveBtn, scoringBtn, uploadBtn, modifyBtn, resetBtn);
+            this.setButtonTheme(
+              saveBtn,
+              scoringBtn,
+              uploadBtn,
+              modifyBtn,
+              resetBtn
+            );
           }
         } else if (key == 'reset') {
           this.selectedSetupCategory = key;
           this.allScoresAreZero = this.checkIfAllScoresAreZero();
           if (allBtnPresent) {
             feather.replace();
-            this.setButtonTheme(resetBtn, scoringBtn, uploadBtn, modifyBtn, saveBtn);
+            this.setButtonTheme(
+              resetBtn,
+              scoringBtn,
+              uploadBtn,
+              modifyBtn,
+              saveBtn
+            );
           }
         } else if (key == 'close') {
           setupModal.style.display = 'none';
@@ -1076,7 +1136,33 @@ export class RumbleProperComponent implements OnInit {
     }
   }
 
-  updateColorTileOwner(row_number: number, isFirst: boolean) {
+  async checkDefendedTileHistory(
+    defendedTileRecordToSearch: DefendedTileRecord
+  ): Promise<boolean> {
+    return new Promise<boolean>((resolve, reject) => {
+      let isDefendedTileRecordFound: boolean = false;
+      console.log('HISTORY: ', this.defended_tile_history);
+      console.log('Search Data: ', defendedTileRecordToSearch);
+      const record_found = this.defended_tile_history.find(
+        (record: DefendedTileRecord) => {
+          console.log('Record: ', record);
+          console.log(
+            'Comparison: ',
+            JSON.stringify(record) == JSON.stringify(defendedTileRecordToSearch)
+          );
+          return (
+            JSON.stringify(record) == JSON.stringify(defendedTileRecordToSearch)
+          );
+        }
+      );
+      console.log('Record found: ', record_found);
+      isDefendedTileRecordFound = record_found ? true : false;
+      console.log('Is Found: ', isDefendedTileRecordFound);
+      resolve(isDefendedTileRecordFound);
+    });
+  }
+
+  async updateColorTileOwner(row_number: number, isFirst: boolean) {
     let tile_index: string;
     let prev_index: string | undefined;
     tile_index =
@@ -1106,6 +1192,7 @@ export class RumbleProperComponent implements OnInit {
 
     console.log('tile_index: ', tile_index);
     console.log('prev_index: ', prev_index);
+    this.player_tile_assignment.tileRowNumber = row_number;
     const tile_group = this.color_tiles[tile_index].find((a: any) =>
       a.color.includes(this.player_tile_assignment.tileColor)
     );
@@ -1134,6 +1221,28 @@ export class RumbleProperComponent implements OnInit {
       const newOwner = this.rumblerInfo.find(
         (r: any) => r.name == tileNewOwner
       );
+
+      console.log('Defender: ', { ...oldOwner });
+      const defender = { ...oldOwner }['name'];
+      const challenger = { ...newOwner }['name'];
+      const tileToDefend = { ...oldOwner }['tile_owned'];
+      console.log('Challenger: ', { ...newOwner });
+
+      const searchData: DefendedTileRecord = {
+        defender: defender,
+        challenger: challenger,
+        tile: tileToDefend,
+      };
+
+      console.log('Search data: ', searchData);
+
+      if (await this.checkDefendedTileHistory(searchData)) {
+        console.log('Record found!');
+        this.tileBreakerNotificationMessage = `${challenger} is no longer able to challenge ${defender} for that tile.`;
+        this.tileBreakerNotification('open');
+        return;
+      }
+
       this.tile_breakers.old.avatar = oldOwner['avatar'];
       this.tile_breakers.old.name = oldOwner['name'];
       this.tile_breakers.new.avatar = newOwner['avatar'];
@@ -1275,15 +1384,14 @@ export class RumbleProperComponent implements OnInit {
     });
   }
 
-  setTileBreakerWinner(isSubmit: boolean, winner?: string) {
+  async setTileBreakerWinner(isSubmit: boolean, winner?: string) {
     const keys = Object.keys(this.tile_breakers);
+    const defender = { ...this.tile_breakers }['old']['name'];
+    const challenger = { ...this.tile_breakers }['new']['name'];
     if (isSubmit) {
-      const defender = { ...this.tile_breakers }['old']['name'];
-
-      const challenger = { ...this.tile_breakers }['new']['name'];
       console.log(`Defender: ${defender} | Challenger: ${challenger}`);
       console.log('Rumbler Info: ', [...this.rumblerInfo]);
-      keys.forEach((key: string) => {
+      keys.forEach(async (key: string) => {
         if (this.tile_breakers[key]['isWinner']) {
           if (key == 'new') {
             const winner = this.rumblerInfo.find(
@@ -1382,11 +1490,47 @@ export class RumbleProperComponent implements OnInit {
             loser['score'] = loser['score'] - scoreAdjustment;
 
             this.tileBreakerModal('close');
+            this.tileBreakerNotificationMessage = `${challenger} has successfully taken the tile from ${defender}!`;
+            console.log(
+              'Before message: ',
+              this.tileBreakerNotificationMessage
+            );
+            this.tileBreakerNotification('open');
             this.colorTilesModal('open');
+            this.resetTileBreakerData();
+            setTimeout(() => {
+              this.colorTilesModal('close');
+            }, 5000);
+          } else {
+            const defendedTileRecord: DefendedTileRecord = {
+              defender: defender,
+              challenger: challenger,
+              tile: this.setPlayerTileOwned(
+                this.player_tile_assignment.tileRowNumber
+              ),
+            };
+
+            let notifMessage = `${defender} has successfully defended the tile!`;
+
+            console.log('To Push: ', defendedTileRecord);
+            const hasExistingRecord = await this.checkDefendedTileHistory(
+              defendedTileRecord
+            );
+            if (!hasExistingRecord) {
+              this.defended_tile_history.push(defendedTileRecord);
+            } else {
+              notifMessage = `${challenger} is no longer able to challenge ${defender} for that tile.`;
+            }
+
+            this.tileBreakerNotificationMessage = notifMessage;
+            this.tileBreakerNotification('open');
+            this.tileBreakerModal('close');
+            this.colorTilesModal('open');
+            this.resetTileBreakerData();
+            setTimeout(() => {
+              this.colorTilesModal('close');
+            }, 5000);
           }
-        } else {
-          this.tileBreakerModal('close');
-          this.colorTilesModal('open');
         }
       });
     } else {
@@ -1396,6 +1540,21 @@ export class RumbleProperComponent implements OnInit {
         this.tile_breakers[key]['isWinner'] = key == winner ? true : false;
       });
     }
+  }
+
+  resetTileBreakerData() {
+    this.tile_breakers = {
+      old: {
+        avatar: null,
+        isWinner: false,
+        name: null,
+      },
+      new: {
+        avatar: null,
+        isWinner: false,
+        name: null,
+      },
+    };
   }
 
   roundToBasePlace(value: number): number {
@@ -1422,6 +1581,7 @@ export class RumbleProperComponent implements OnInit {
         .subscribe(() => this.onResize());
     }
   }
+
   onResize() {
     this.screen = {
       width: window.innerWidth,
@@ -1454,5 +1614,27 @@ export class RumbleProperComponent implements OnInit {
         `${this.screen.width}px`
       );
     });
+  }
+
+  tileBreakerNotification(key: string) {
+    setTimeout(() => {
+      const modal = document.getElementById('tileBreakerNotificationModal');
+      if (modal) {
+        if (key == 'open') {
+          (modal as HTMLElement).style.display = 'flex';
+          (modal as HTMLElement).style.backdropFilter = 'brightness(0.5)';
+
+          setTimeout(() => {
+            this.tileBreakerNotification('close');
+          }, 3000);
+        } else if (key == 'close') {
+          (modal as HTMLElement).style.display = 'none';
+        }
+      }
+    });
+  }
+
+  ngDoCheck() {
+    console.log('Message: ', this.tileBreakerNotificationMessage);
   }
 }
